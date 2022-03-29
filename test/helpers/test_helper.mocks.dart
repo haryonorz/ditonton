@@ -168,23 +168,24 @@ class MockMovieLocalDataSource extends _i1.Mock
   }
 
   @override
-  _i7.Future<String> insertWatchlist(_i14.MovieTable? movie) =>
+  _i7.Future<String> insertWatchlistMovie(_i14.TvShowTable? movie) =>
       (super.noSuchMethod(Invocation.method(#insertWatchlist, [movie]),
           returnValue: Future<String>.value('')) as _i7.Future<String>);
   @override
-  _i7.Future<String> removeWatchlist(_i14.MovieTable? movie) =>
+  _i7.Future<String> removeWatchlistMovie(_i14.TvShowTable? movie) =>
       (super.noSuchMethod(Invocation.method(#removeWatchlist, [movie]),
           returnValue: Future<String>.value('')) as _i7.Future<String>);
   @override
-  _i7.Future<_i14.MovieTable?> getMovieById(int? id) =>
+  _i7.Future<_i14.TvShowTable?> getMovieById(int? id) =>
       (super.noSuchMethod(Invocation.method(#getMovieById, [id]),
-              returnValue: Future<_i14.MovieTable?>.value())
-          as _i7.Future<_i14.MovieTable?>);
+              returnValue: Future<_i14.TvShowTable?>.value())
+          as _i7.Future<_i14.TvShowTable?>);
   @override
-  _i7.Future<List<_i14.MovieTable>> getWatchlistMovies() => (super.noSuchMethod(
-          Invocation.method(#getWatchlistMovies, []),
-          returnValue: Future<List<_i14.MovieTable>>.value(<_i14.MovieTable>[]))
-      as _i7.Future<List<_i14.MovieTable>>);
+  _i7.Future<List<_i14.TvShowTable>> getWatchlistMovies() =>
+      (super.noSuchMethod(Invocation.method(#getWatchlistMovies, []),
+              returnValue:
+                  Future<List<_i14.TvShowTable>>.value(<_i14.TvShowTable>[]))
+          as _i7.Future<List<_i14.TvShowTable>>);
 }
 
 /// A class which mocks [DatabaseHelper].
@@ -201,11 +202,11 @@ class MockDatabaseHelper extends _i1.Mock implements _i15.DatabaseHelper {
               returnValue: Future<_i16.Database?>.value())
           as _i7.Future<_i16.Database?>);
   @override
-  _i7.Future<int> insertWatchlist(_i14.MovieTable? movie) =>
+  _i7.Future<int> insertWatchlist(_i14.TvShowTable? movie) =>
       (super.noSuchMethod(Invocation.method(#insertWatchlist, [movie]),
           returnValue: Future<int>.value(0)) as _i7.Future<int>);
   @override
-  _i7.Future<int> removeWatchlist(_i14.MovieTable? movie) =>
+  _i7.Future<int> removeWatchlist(_i14.TvShowTable? movie) =>
       (super.noSuchMethod(Invocation.method(#removeWatchlist, [movie]),
           returnValue: Future<int>.value(0)) as _i7.Future<int>);
   @override

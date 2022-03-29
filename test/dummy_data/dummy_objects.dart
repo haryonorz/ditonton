@@ -44,7 +44,7 @@ final testWatchlistMovie = Movie.watchlist(
   overview: 'overview',
 );
 
-final testMovieTable = MovieTable(
+final testMovieTable = TvShowTable(
   id: 1,
   title: 'title',
   posterPath: 'posterPath',
