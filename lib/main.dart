@@ -1,18 +1,26 @@
 import 'package:ditonton/common/constants.dart';
+import 'package:ditonton/common/menu_enum.dart';
 import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
+import 'package:ditonton/presentation/pages/home_tv_show_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/pages/home_movie_page.dart';
 import 'package:ditonton/presentation/pages/popular_movies_page.dart';
 import 'package:ditonton/presentation/pages/search_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_movies_page.dart';
+import 'package:ditonton/presentation/provider/drawer_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/popular_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/top_rated_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/watchlist_movie_notifier.dart';
+import 'package:ditonton/presentation/provider/tv_show/popular_tv_shows_notifier.dart';
+import 'package:ditonton/presentation/provider/tv_show/top_rated_tv_shows_notifier.dart';
+import 'package:ditonton/presentation/provider/tv_show/tv_show_detail_notifier.dart';
+import 'package:ditonton/presentation/provider/tv_show/tv_show_list_notifier.dart';
+import 'package:ditonton/presentation/provider/tv_show/watchlist_tv_show_notifier.dart';
 import 'package:ditonton/presentation/widgets/custom_darawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +55,27 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<WatchlistMovieNotifier>(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<TvShowListNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<TvShowDetailNotifier>(),
+        ),
+        // ChangeNotifierProvider(
+        //   create: (_) => di.locator<TvShowSearchNotifier>(),
+        // ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<TopRatedTvShowsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<PopularTvShowsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<WatchlistTvShowNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<DrawerNotifier>(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -56,10 +85,22 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: kRichBlack,
           textTheme: kTextTheme,
         ),
-        home: Material(
-          child: CustomDrawer(
-            content: HomeMoviePage(),
-          ),
+        home: Consumer<DrawerNotifier>(
+          builder: (context, data, child) {
+            final activeMenu = data.selectedMenu;
+
+            return Material(
+              child: CustomDrawer(
+                activeMenu: activeMenu,
+                menuClickCallback: (MenuItem menuSelected) {
+                  data.setSelectedMenu(menuSelected);
+                },
+                content: activeMenu == MenuItem.Movie
+                    ? HomeMoviePage()
+                    : HomeTvShowPage(),
+              ),
+            );
+          },
         ),
         navigatorObservers: [routeObserver],
         onGenerateRoute: (RouteSettings settings) {

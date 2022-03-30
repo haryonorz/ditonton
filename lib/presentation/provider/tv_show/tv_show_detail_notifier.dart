@@ -4,8 +4,8 @@ import 'package:ditonton/domain/entities/tv_show_detail.dart';
 import 'package:ditonton/domain/usecases/tv_show/get_tv_show_detail.dart';
 import 'package:ditonton/domain/usecases/tv_show/get_tv_show_recommendations.dart';
 import 'package:ditonton/domain/usecases/tv_show/get_watchlist_status.dart';
-import 'package:ditonton/domain/usecases/tv_show/remove_watchlist.dart';
-import 'package:ditonton/domain/usecases/tv_show/save_watchlist.dart';
+import 'package:ditonton/domain/usecases/tv_show/remove_watchlist_tv_shows.dart';
+import 'package:ditonton/domain/usecases/tv_show/save_watchlist_tv_show.dart';
 import 'package:flutter/material.dart';
 
 class TvShowDetailNotifier extends ChangeNotifier {
@@ -14,15 +14,15 @@ class TvShowDetailNotifier extends ChangeNotifier {
 
   final GetTvShowDetail getTvShowDetail;
   final GetTvShowRecommendations getTvShowRecommendations;
-  final GetWatchListStatus getWatchListStatus;
-  final SaveWatchList saveWatchList;
-  final RemoveWatchlist removeWatchlist;
+  final GetWatchlistStatus getWatchlistStatus;
+  final SaveWatchlistTvShow saveWatchlist;
+  final RemoveWatchlistTvShow removeWatchlist;
 
   TvShowDetailNotifier({
     required this.getTvShowDetail,
     required this.getTvShowRecommendations,
-    required this.getWatchListStatus,
-    required this.saveWatchList,
+    required this.getWatchlistStatus,
+    required this.saveWatchlist,
     required this.removeWatchlist,
   });
 
@@ -76,7 +76,7 @@ class TvShowDetailNotifier extends ChangeNotifier {
   String get watchlistMessage => _watchlistMessage;
 
   Future<void> addWatchlist(TvShowDetail tvShow) async {
-    final result = await saveWatchList.execute(tvShow);
+    final result = await saveWatchlist.execute(tvShow);
 
     await result.fold((failure) async {
       _watchlistMessage = failure.message;
@@ -103,7 +103,7 @@ class TvShowDetailNotifier extends ChangeNotifier {
   }
 
   Future<void> loadWatchlistStatus(int id) async {
-    final result = await getWatchListStatus.execute(id);
+    final result = await getWatchlistStatus.execute(id);
     _isAddedtoWatchlist = result;
     notifyListeners();
   }

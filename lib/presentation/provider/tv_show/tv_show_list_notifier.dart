@@ -17,7 +17,7 @@ class TvShowListNotifier extends ChangeNotifier {
   });
 
   var _nowPlayingTvShows = <TvShow>[];
-  List<TvShow> get nowPlayingTvshows => _nowPlayingTvShows;
+  List<TvShow> get nowPlayingTvShows => _nowPlayingTvShows;
 
   RequestState _nowPlayingState = RequestState.Empty;
   RequestState get nowPlayingState => _nowPlayingState;
