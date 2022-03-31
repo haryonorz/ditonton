@@ -1,7 +1,7 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/menu_enum.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
-import 'package:ditonton/presentation/pages/watchlist_movies_page.dart';
+import 'package:ditonton/presentation/pages/watchlist_page.dart';
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -63,7 +63,7 @@ class _CustomDrawerState extends State<CustomDrawer>
             title: Text('Watchlist'),
             onTap: () {
               toggle();
-              Navigator.pushNamed(context, WatchlistMoviesPage.ROUTE_NAME);
+              Navigator.pushNamed(context, WatchlistPage.ROUTE_NAME);
             },
           ),
           ListTile(
