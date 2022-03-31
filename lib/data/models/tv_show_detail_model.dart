@@ -1,10 +1,12 @@
 import 'package:ditonton/data/models/genre_model.dart';
+import 'package:ditonton/data/models/season_model.dart';
 import 'package:ditonton/domain/entities/tv_show_detail.dart';
 import 'package:equatable/equatable.dart';
 
 class TvShowDetailResponse extends Equatable {
   TvShowDetailResponse({
     required this.backdropPath,
+    required this.episodeRunTime,
     required this.firstAirDate,
     required this.genres,
     required this.homepage,
@@ -23,11 +25,13 @@ class TvShowDetailResponse extends Equatable {
     required this.status,
     required this.tagline,
     required this.type,
+    required this.seasons,
     required this.voteAverage,
     required this.voteCount,
   });
 
   String backdropPath;
+  List<int> episodeRunTime;
   String firstAirDate;
   List<GenreModel> genres;
   String homepage;
@@ -46,12 +50,14 @@ class TvShowDetailResponse extends Equatable {
   String status;
   String tagline;
   String type;
+  List<SeasonModel> seasons;
   double voteAverage;
   int voteCount;
 
   factory TvShowDetailResponse.fromJson(Map<String, dynamic> json) =>
       TvShowDetailResponse(
         backdropPath: json["backdrop_path"],
+        episodeRunTime: List<int>.from(json["episode_run_time"].map((x) => x)),
         firstAirDate: json["first_air_date"],
         genres: List<GenreModel>.from(
             json["genres"].map((x) => GenreModel.fromJson(x))),
@@ -71,12 +77,15 @@ class TvShowDetailResponse extends Equatable {
         status: json["status"],
         tagline: json["tagline"],
         type: json["type"],
+        seasons: List<SeasonModel>.from(
+            json["seasons"].map((x) => SeasonModel.fromJson(x))),
         voteAverage: json["vote_average"].toDouble(),
         voteCount: json["vote_count"],
       );
 
   Map<String, dynamic> toJson() => {
         "backdrop_path": backdropPath,
+        "episode_run_time": List<dynamic>.from(episodeRunTime.map((x) => x)),
         "first_air_date": firstAirDate,
         "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
         "homepage": homepage,
@@ -95,6 +104,7 @@ class TvShowDetailResponse extends Equatable {
         "status": status,
         "tagline": tagline,
         "type": type,
+        "seasons": List<dynamic>.from(seasons.map((x) => x.toJson())),
         "vote_average": voteAverage,
         "vote_count": voteCount,
       };
@@ -102,6 +112,7 @@ class TvShowDetailResponse extends Equatable {
   TvShowDetail toEntity() {
     return TvShowDetail(
       backdropPath: this.backdropPath,
+      episodeRunTime: this.episodeRunTime,
       firstAirDate: this.firstAirDate,
       genres: this.genres.map((genre) => genre.toEntity()).toList(),
       id: this.id,
@@ -111,6 +122,7 @@ class TvShowDetailResponse extends Equatable {
       originalName: this.originalName,
       overview: this.overview,
       posterPath: this.posterPath,
+      seasons: this.seasons.map((season) => season.toEntity()).toList(),
       voteAverage: this.voteAverage,
       voteCount: this.voteCount,
     );
@@ -119,6 +131,7 @@ class TvShowDetailResponse extends Equatable {
   @override
   List<Object?> get props => [
         backdropPath,
+        episodeRunTime,
         firstAirDate,
         genres,
         homepage,
@@ -137,6 +150,7 @@ class TvShowDetailResponse extends Equatable {
         status,
         tagline,
         type,
+        seasons,
         voteAverage,
         voteCount,
       ];

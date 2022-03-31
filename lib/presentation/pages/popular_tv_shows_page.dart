@@ -1,36 +1,36 @@
 import 'package:ditonton/common/menu_enum.dart';
 import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/pages/movie_detail_page.dart';
-import 'package:ditonton/presentation/provider/movie/popular_movies_notifier.dart';
+import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
+import 'package:ditonton/presentation/provider/tv_show/popular_tv_shows_notifier.dart';
 import 'package:ditonton/presentation/widgets/content_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PopularMoviesPage extends StatefulWidget {
-  static const ROUTE_NAME = '/popular-movie';
+class PopularTvShowsPage extends StatefulWidget {
+  static const ROUTE_NAME = '/popular-tv-show';
 
   @override
-  _PopularMoviesPageState createState() => _PopularMoviesPageState();
+  _PopularTvShowsPageState createState() => _PopularTvShowsPageState();
 }
 
-class _PopularMoviesPageState extends State<PopularMoviesPage> {
+class _PopularTvShowsPageState extends State<PopularTvShowsPage> {
   @override
   void initState() {
     super.initState();
     Future.microtask(() =>
-        Provider.of<PopularMoviesNotifier>(context, listen: false)
-            .fetchPopularMovies());
+        Provider.of<PopularTvShowsNotifier>(context, listen: false)
+            .fetchPopularTvShows());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Popular Movies'),
+        title: Text('Popular Tv Shows'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<PopularMoviesNotifier>(
+        child: Consumer<PopularTvShowsNotifier>(
           builder: (context, data, child) {
             if (data.state == RequestState.Loading) {
               return Center(
@@ -39,14 +39,14 @@ class _PopularMoviesPageState extends State<PopularMoviesPage> {
             } else if (data.state == RequestState.Loaded) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final movie = data.movies[index];
+                  final tvShow = data.tvShows[index];
                   return ContentCard(
-                    activeMenu: MenuItem.Movie,
-                    movie: movie,
-                    routeName: MovieDetailPage.ROUTE_NAME,
+                    activeMenu: MenuItem.TvShow,
+                    tvShow: tvShow,
+                    routeName: TvShowDetailPage.ROUTE_NAME,
                   );
                 },
-                itemCount: data.movies.length,
+                itemCount: data.tvShows.length,
               );
             } else {
               return Center(
