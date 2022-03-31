@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/formatter.dart';
+import 'package:ditonton/domain/entities/season.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/domain/entities/tv_show_detail.dart';
 import 'package:ditonton/common/state_enum.dart';
@@ -200,67 +201,11 @@ class DetailContent extends StatelessWidget {
                               '${tvShow.numberOfSeasons} Season',
                             ),
                             SizedBox(height: 16),
-                            SubHeading(
-                              title: 'Current Season',
-                              onTap: () {
-                                // Navigator.pushNamed(context, PopularTvShowsPage.ROUTE_NAME);
-                              },
+                            Text(
+                              'Season',
+                              style: kHeading6,
                             ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 4),
-                              child: Stack(
-                                alignment: Alignment.bottomLeft,
-                                children: [
-                                  Card(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                        left: 16 + 80 + 16,
-                                        bottom: 8,
-                                        right: 8,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '${tvShow.seasons.last.seasonNumber} Season',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: kHeading6,
-                                          ),
-                                          SizedBox(height: 16),
-                                          Text(
-                                            '${tvShow.seasons.last.airDate.substring(0, 5)} | ${tvShow.seasons.last.seasonNumber} Episode',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                      left: 16,
-                                      bottom: 16,
-                                    ),
-                                    child: ClipRRect(
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            '$BASE_IMAGE_URL${tvShow.seasons.last.posterPath}',
-                                        width: 80,
-                                        placeholder: (context, url) => Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            SeasonList(seasons: tvShow.seasons),
                             SizedBox(height: 16),
                             Text(
                               'Recommendations',
@@ -357,6 +302,89 @@ class DetailContent extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class SeasonList extends StatelessWidget {
+  final List<Season> seasons;
+
+  const SeasonList({
+    required this.seasons,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          final season = seasons[index];
+          return Container(
+            margin: const EdgeInsets.only(top: 4, bottom: 8),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Card(
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        left: 16 + 80 + 8,
+                        top: 8,
+                        right: 8,
+                      ),
+                      height: 70,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${season.seasonNumber} Season',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: kHeading6,
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            '${season.airDate != null ? season.airDate?.substring(0, 4) : 'N/A'} | ${season.seasonNumber} Episode',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                    margin: const EdgeInsets.only(
+                      left: 16,
+                      bottom: 16,
+                    ),
+                    child: ClipRRect(
+                      child: season.posterPath != null
+                          ? CachedNetworkImage(
+                              imageUrl: '$BASE_IMAGE_URL${season.posterPath}',
+                              width: 80,
+                              placeholder: (context, url) => Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            )
+                          : Container(
+                              color: kDavysGrey,
+                              width: 80,
+                              child: Center(child: Icon(Icons.image)),
+                            ),
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    )),
+              ],
+            ),
+          );
+        },
+        itemCount: seasons.length,
+      ),
     );
   }
 }
