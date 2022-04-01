@@ -27,7 +27,7 @@ import 'package:ditonton/domain/usecases/tv_show/get_watchlist_tv_shows.dart';
 import 'package:ditonton/domain/usecases/tv_show/remove_watchlist_tv_shows.dart';
 import 'package:ditonton/domain/usecases/tv_show/save_watchlist_tv_show.dart';
 import 'package:ditonton/domain/usecases/tv_show/search_tv_shows.dart';
-import 'package:ditonton/presentation/provider/drawer_notifier.dart';
+import 'package:ditonton/presentation/provider/menu_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/search_notifier.dart';

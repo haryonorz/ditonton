@@ -8,6 +8,7 @@ import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
 import 'package:ditonton/presentation/provider/tv_show/tv_show_list_notifier.dart';
 import 'package:ditonton/presentation/widgets/poster_card_list.dart';
 import 'package:ditonton/presentation/widgets/sub_heading.dart';
+import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +32,7 @@ class _HomeTvShowPageState extends State<HomeTvShowPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ditonton'),
+        title: Text(APP_NAME),
         leading: Icon(Icons.menu),
         actions: [
           IconButton(
@@ -49,7 +50,7 @@ class _HomeTvShowPageState extends State<HomeTvShowPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Now Playing',
+                HEADING_NOW_PLAYING,
                 style: kHeading6,
               ),
               Consumer<TvShowListNotifier>(builder: (context, data, child) {
@@ -61,11 +62,11 @@ class _HomeTvShowPageState extends State<HomeTvShowPage> {
                 } else if (state == RequestState.Loaded) {
                   return TvShowList(data.nowPlayingTvShows);
                 } else {
-                  return Text('Failed');
+                  return ViewError(message: 'Failed');
                 }
               }),
               SubHeading(
-                title: 'Popular',
+                title: HEADING_POPULAR,
                 onTap: () =>
                     Navigator.pushNamed(context, PopularTvShowsPage.ROUTE_NAME),
               ),
@@ -78,11 +79,11 @@ class _HomeTvShowPageState extends State<HomeTvShowPage> {
                 } else if (state == RequestState.Loaded) {
                   return TvShowList(data.popularTvShows);
                 } else {
-                  return Text('Failed');
+                  return ViewError(message: 'Failed');
                 }
               }),
               SubHeading(
-                title: 'Top Rated',
+                title: HEADING_TOP_RATED,
                 onTap: () => Navigator.pushNamed(
                     context, TopRatedTvShowsPage.ROUTE_NAME),
               ),
@@ -95,7 +96,7 @@ class _HomeTvShowPageState extends State<HomeTvShowPage> {
                 } else if (state == RequestState.Loaded) {
                   return TvShowList(data.topRatedTvShows);
                 } else {
-                  return Text('Failed');
+                  return ViewError(message: 'Failed');
                 }
               }),
             ],

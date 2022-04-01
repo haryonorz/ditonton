@@ -1,8 +1,10 @@
+import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/menu_enum.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
 import 'package:ditonton/presentation/provider/tv_show/top_rated_tv_shows_notifier.dart';
 import 'package:ditonton/presentation/widgets/content_card_list.dart';
+import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +28,7 @@ class _TopRatedTvShowsPageState extends State<TopRatedTvShowsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Top Rated Tv Shows'),
+        title: Text('$HEADING_TOP_RATED Tv Shows'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -51,7 +53,7 @@ class _TopRatedTvShowsPageState extends State<TopRatedTvShowsPage> {
             } else {
               return Center(
                 key: Key('error_message'),
-                child: Text(data.message),
+                child: ViewError(message: data.message),
               );
             }
           },

@@ -4,6 +4,7 @@ import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
 import 'package:ditonton/presentation/provider/tv_show/watchlist_tv_show_notifier.dart';
 import 'package:ditonton/presentation/widgets/content_card_list.dart';
+import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -44,6 +45,9 @@ class _WatchlistTvShowsPageState extends State<WatchlistTvShowsPage>
               child: CircularProgressIndicator(),
             );
           } else if (data.watchlistState == RequestState.Loaded) {
+            if (data.watchlistTvShows.isEmpty)
+              return Center(child: ViewError(message: 'No Data'));
+
             return ListView.builder(
               itemBuilder: (context, index) {
                 final tvShow = data.watchlistTvShows[index];
@@ -58,7 +62,7 @@ class _WatchlistTvShowsPageState extends State<WatchlistTvShowsPage>
           } else {
             return Center(
               key: Key('error_message'),
-              child: Text(data.message),
+              child: ViewError(message: data.message),
             );
           }
         },

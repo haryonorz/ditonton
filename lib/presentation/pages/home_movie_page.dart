@@ -8,6 +8,7 @@ import 'package:ditonton/presentation/provider/movie/movie_list_notifier.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/widgets/poster_card_list.dart';
 import 'package:ditonton/presentation/widgets/sub_heading.dart';
+import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +32,7 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ditonton'),
+        title: Text(APP_NAME),
         leading: Icon(Icons.menu),
         actions: [
           IconButton(
@@ -49,7 +50,7 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Now Playing',
+                HEADING_NOW_PLAYING,
                 style: kHeading6,
               ),
               Consumer<MovieListNotifier>(builder: (context, data, child) {
@@ -61,11 +62,11 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                 } else if (state == RequestState.Loaded) {
                   return MovieList(data.nowPlayingMovies);
                 } else {
-                  return Text('Failed');
+                  return ViewError(message: 'Failed');
                 }
               }),
               SubHeading(
-                title: 'Popular',
+                title: HEADING_POPULAR,
                 onTap: () =>
                     Navigator.pushNamed(context, PopularMoviesPage.ROUTE_NAME),
               ),
@@ -78,11 +79,11 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                 } else if (state == RequestState.Loaded) {
                   return MovieList(data.popularMovies);
                 } else {
-                  return Text('Failed');
+                  return ViewError(message: 'Failed');
                 }
               }),
               SubHeading(
-                title: 'Top Rated',
+                title: HEADING_TOP_RATED,
                 onTap: () =>
                     Navigator.pushNamed(context, TopRatedMoviesPage.ROUTE_NAME),
               ),
@@ -95,7 +96,7 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                 } else if (state == RequestState.Loaded) {
                   return MovieList(data.topRatedMovies);
                 } else {
-                  return Text('Failed');
+                  return ViewError(message: 'Failed');
                 }
               }),
             ],

@@ -3,9 +3,10 @@ import 'package:ditonton/common/menu_enum.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
-import 'package:ditonton/presentation/provider/drawer_notifier.dart';
+import 'package:ditonton/presentation/provider/menu_notifier.dart';
 import 'package:ditonton/presentation/provider/search_notifier.dart';
 import 'package:ditonton/presentation/widgets/content_card_list.dart';
+import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -73,6 +74,9 @@ class _SearchPageState extends State<SearchPage> {
                     else
                       result = data.searchTvShowResult;
 
+                    if (result.isEmpty)
+                      return Expanded(child: ViewError(message: 'No Data'));
+
                     return Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.all(8),
@@ -98,7 +102,7 @@ class _SearchPageState extends State<SearchPage> {
                     );
                   } else {
                     return Expanded(
-                      child: Container(),
+                      child: ViewError(message: data.message),
                     );
                   }
                 },

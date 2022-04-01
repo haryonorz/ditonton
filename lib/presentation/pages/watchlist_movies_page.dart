@@ -4,6 +4,7 @@ import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/provider/movie/watchlist_movie_notifier.dart';
 import 'package:ditonton/presentation/widgets/content_card_list.dart';
+import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -44,6 +45,9 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
               child: CircularProgressIndicator(),
             );
           } else if (data.watchlistState == RequestState.Loaded) {
+            if (data.watchlistMovies.isEmpty)
+              return Center(child: ViewError(message: 'No Data'));
+
             return ListView.builder(
               itemBuilder: (context, index) {
                 final movie = data.watchlistMovies[index];
@@ -58,7 +62,7 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
           } else {
             return Center(
               key: Key('error_message'),
-              child: Text(data.message),
+              child: ViewError(message: data.message),
             );
           }
         },
