@@ -24,7 +24,7 @@ class TvShowTable extends Equatable {
 
   factory TvShowTable.fromMap(Map<String, dynamic> map) => TvShowTable(
         id: map['id'],
-        name: map['title'],
+        name: map['name'],
         posterPath: map['posterPath'],
         overview: map['overview'],
       );
