@@ -1,7 +1,7 @@
 import 'package:ditonton/common/menu_enum.dart';
 import 'package:flutter/material.dart';
 
-class DrawerNotifier extends ChangeNotifier {
+class MenuNotifier extends ChangeNotifier {
   MenuItem _selectedMenu = MenuItem.Movie;
   MenuItem get selectedMenu => _selectedMenu;
 

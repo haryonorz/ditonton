@@ -3,28 +3,31 @@ import 'package:ditonton/common/failure.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/usecases/movie/search_movies.dart';
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
+import 'package:ditonton/domain/usecases/tv_show/search_tv_shows.dart';
+import 'package:ditonton/presentation/provider/search_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'movie_search_notifier_test.mocks.dart';
+import 'search_notifier_test.mocks.dart';
 
-@GenerateMocks([SearchMovies])
+@GenerateMocks([SearchMovies, SearchTvShows])
 void main() {
-  late MovieSearchNotifier provider;
+  late SearchNotifier provider;
   late MockSearchMovies mockSearchMovies;
+  late MockSearchTvShows mockSearchTvShows;
   late int listenerCallCount;
-
   setUp(() {
     listenerCallCount = 0;
     mockSearchMovies = MockSearchMovies();
-    provider = MovieSearchNotifier(searchMovies: mockSearchMovies)
-      ..addListener(() {
+    mockSearchTvShows = MockSearchTvShows();
+    provider = SearchNotifier(
+      searchMovies: mockSearchMovies,
+      searchTvShows: mockSearchTvShows,
+    )..addListener(() {
         listenerCallCount += 1;
       });
   });
-
   final tMovieModel = Movie(
     adult: false,
     backdropPath: '/muth4OYamXf41G2evdrLEg8d3om.jpg',
@@ -54,7 +57,6 @@ void main() {
       // assert
       expect(provider.state, RequestState.Loading);
     });
-
     test('should change search result data when data is gotten successfully',
         () async {
       // arrange
@@ -64,10 +66,9 @@ void main() {
       await provider.fetchMovieSearch(tQuery);
       // assert
       expect(provider.state, RequestState.Loaded);
-      expect(provider.searchResult, tMovieList);
+      expect(provider.searchMovieResult, tMovieList);
       expect(listenerCallCount, 2);
     });
-
     test('should return error when data is unsuccessful', () async {
       // arrange
       when(mockSearchMovies.execute(tQuery))

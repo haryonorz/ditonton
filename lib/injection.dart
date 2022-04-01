@@ -30,7 +30,7 @@ import 'package:ditonton/domain/usecases/tv_show/search_tv_shows.dart';
 import 'package:ditonton/presentation/provider/drawer_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/movie_list_notifier.dart';
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
+import 'package:ditonton/presentation/provider/search_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/popular_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/top_rated_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/watchlist_movie_notifier.dart';
@@ -79,8 +79,9 @@ void init() {
     ),
   );
   locator.registerFactory(
-    () => MovieSearchNotifier(
+    () => SearchNotifier(
       searchMovies: locator(),
+      searchTvShows: locator(),
     ),
   );
   locator.registerFactory(
@@ -114,7 +115,7 @@ void init() {
     ),
   );
   locator.registerFactory(
-    () => DrawerNotifier(),
+    () => MenuNotifier(),
   );
 
   // use case
