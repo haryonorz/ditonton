@@ -6,6 +6,7 @@ import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/domain/entities/tv_show_detail.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/provider/tv_show/tv_show_detail_notifier.dart';
+import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -51,7 +52,10 @@ class _TvShowDetailPagePageState extends State<TvShowDetailPage> {
               ),
             );
           } else {
-            return Text(provider.message);
+            return ViewError(
+              key: Key('error_message'),
+              message: provider.message,
+            );
           }
         },
       ),

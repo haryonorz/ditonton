@@ -3,7 +3,7 @@ import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/domain/entities/tv_show_detail.dart';
 import 'package:ditonton/domain/usecases/tv_show/get_tv_show_detail.dart';
 import 'package:ditonton/domain/usecases/tv_show/get_tv_show_recommendations.dart';
-import 'package:ditonton/domain/usecases/tv_show/get_watchlist_status.dart';
+import 'package:ditonton/domain/usecases/tv_show/get_watchlist_status_tv_show.dart';
 import 'package:ditonton/domain/usecases/tv_show/remove_watchlist_tv_shows.dart';
 import 'package:ditonton/domain/usecases/tv_show/save_watchlist_tv_show.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class TvShowDetailNotifier extends ChangeNotifier {
 
   final GetTvShowDetail getTvShowDetail;
   final GetTvShowRecommendations getTvShowRecommendations;
-  final GetWatchlistStatus getWatchlistStatus;
+  final GetWatchlistStatusTvShow getWatchlistStatus;
   final SaveWatchlistTvShow saveWatchlist;
   final RemoveWatchlistTvShow removeWatchlist;
 

@@ -2,12 +2,14 @@ import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/presentation/pages/popular_tv_shows_page.dart';
 import 'package:ditonton/presentation/provider/tv_show/popular_tv_shows_notifier.dart';
+import 'package:ditonton/presentation/widgets/content_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import '../../dummy_data/dummy_objects.dart';
 import 'popular_tv_show_page_test.mocks.dart';
 
 @GenerateMocks([PopularTvShowsNotifier])
@@ -50,6 +52,18 @@ void main() {
     await tester.pumpWidget(_makeTestableWidget(PopularTvShowsPage()));
 
     expect(listViewFinder, findsOneWidget);
+  });
+
+  testWidgets('Page should display ListView Item when data is loaded',
+      (WidgetTester tester) async {
+    when(mockNotifier.state).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvShows).thenReturn(<TvShow>[testTvShow]);
+
+    final content = find.byType(ContentCard);
+
+    await tester.pumpWidget(_makeTestableWidget(PopularTvShowsPage()));
+
+    expect(content, findsOneWidget);
   });
 
   testWidgets('Page should display text with message when Error',

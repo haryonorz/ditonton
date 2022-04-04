@@ -12,7 +12,7 @@ import 'package:ditonton/domain/usecases/tv_show/get_tv_show_detail.dart'
     as _i2;
 import 'package:ditonton/domain/usecases/tv_show/get_tv_show_recommendations.dart'
     as _i3;
-import 'package:ditonton/domain/usecases/tv_show/get_watchlist_status.dart'
+import 'package:ditonton/domain/usecases/tv_show/get_watchlist_status_tv_show.dart'
     as _i4;
 import 'package:ditonton/domain/usecases/tv_show/remove_watchlist_tv_shows.dart'
     as _i6;
@@ -37,8 +37,8 @@ class _FakeGetTvShowDetail_0 extends _i1.Fake implements _i2.GetTvShowDetail {}
 class _FakeGetTvShowRecommendations_1 extends _i1.Fake
     implements _i3.GetTvShowRecommendations {}
 
-class _FakeGetWatchlistStatus_2 extends _i1.Fake
-    implements _i4.GetWatchlistStatus {}
+class _FakeGetWatchlistStatusTvShow_2 extends _i1.Fake
+    implements _i4.GetWatchlistStatusTvShow {}
 
 class _FakeSaveWatchlistTvShow_3 extends _i1.Fake
     implements _i5.SaveWatchlistTvShow {}
@@ -67,9 +67,10 @@ class MockTvShowDetailNotifier extends _i1.Mock
               returnValue: _FakeGetTvShowRecommendations_1())
           as _i3.GetTvShowRecommendations);
   @override
-  _i4.GetWatchlistStatus get getWatchlistStatus =>
+  _i4.GetWatchlistStatusTvShow get getWatchlistStatus =>
       (super.noSuchMethod(Invocation.getter(#getWatchlistStatus),
-          returnValue: _FakeGetWatchlistStatus_2()) as _i4.GetWatchlistStatus);
+              returnValue: _FakeGetWatchlistStatusTvShow_2())
+          as _i4.GetWatchlistStatusTvShow);
   @override
   _i5.SaveWatchlistTvShow get saveWatchlist => (super.noSuchMethod(
       Invocation.getter(#saveWatchlist),

@@ -5,6 +5,7 @@ import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
 import 'package:ditonton/presentation/provider/movie/movie_detail_notifier.dart';
 import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +51,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               ),
             );
           } else {
-            return Text(provider.message);
+            return ViewError(
+              key: Key('error_message'),
+              message: provider.message,
+            );
           }
         },
       ),
