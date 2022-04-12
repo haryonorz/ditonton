@@ -2,6 +2,7 @@ import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/http_ssl_pinning.dart';
 import 'package:ditonton/common/menu_enum.dart';
 import 'package:ditonton/common/utils.dart';
+import 'package:ditonton/presentation/bloc/search_bloc.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/home_tv_show_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
@@ -13,7 +14,6 @@ import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_page.dart';
-import 'package:ditonton/presentation/provider/menu_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/search_notifier.dart';
@@ -28,8 +28,11 @@ import 'package:ditonton/presentation/provider/tv_show/watchlist_tv_show_notifie
 import 'package:ditonton/presentation/widgets/custom_darawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:ditonton/injection.dart' as di;
+
+import 'presentation/cubit/menu_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +55,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<SearchNotifier>(),
         ),
+        BlocProvider(create: (_) => di.locator<SearchMovieBloc>()),
+        BlocProvider(create: (_) => di.locator<SearchTvShowBloc>()),
         ChangeNotifierProvider(
           create: (_) => di.locator<TopRatedMoviesNotifier>(),
         ),
@@ -67,9 +72,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<TvShowDetailNotifier>(),
         ),
-        // ChangeNotifierProvider(
-        //   create: (_) => di.locator<TvShowSearchNotifier>(),
-        // ),
         ChangeNotifierProvider(
           create: (_) => di.locator<TopRatedTvShowsNotifier>(),
         ),
@@ -79,9 +81,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<WatchlistTvShowNotifier>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MenuNotifier>(),
-        ),
+        BlocProvider(create: (_) => di.locator<MenuCubit>()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -91,15 +91,15 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: kRichBlack,
           textTheme: kTextTheme,
         ),
-        home: Consumer<MenuNotifier>(
-          builder: (context, data, child) {
-            final activeMenu = data.selectedMenu;
+        home: BlocBuilder<MenuCubit, MenuItem>(
+          builder: (context, menu) {
+            final activeMenu = menu;
 
             return Material(
               child: CustomDrawer(
                 activeMenu: activeMenu,
                 menuClickCallback: (MenuItem menuSelected) {
-                  data.setSelectedMenu(menuSelected);
+                  context.read<MenuCubit>().setSelectedMenu(menuSelected);
                 },
                 content: activeMenu == MenuItem.Movie
                     ? HomeMoviePage()
