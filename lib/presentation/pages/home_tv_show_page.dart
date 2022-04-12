@@ -1,16 +1,20 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
+import 'package:ditonton/presentation/cubit/now_playing_tv_shows/now_playing_tv_shows_cubit.dart';
+import 'package:ditonton/presentation/cubit/now_playing_tv_shows/now_playing_tv_shows_state.dart';
+import 'package:ditonton/presentation/cubit/popular_tv_shows/popular_tv_shows_cubit.dart';
+import 'package:ditonton/presentation/cubit/popular_tv_shows/popular_tv_shows_state.dart';
+import 'package:ditonton/presentation/cubit/top_rated_tv_shows/top_rated_tv_shows_cubit.dart';
+import 'package:ditonton/presentation/cubit/top_rated_tv_shows/top_rated_tv_shows_state.dart';
 import 'package:ditonton/presentation/pages/popular_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/search_page.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/pages/top_rated_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
-import 'package:ditonton/presentation/provider/tv_show/tv_show_list_notifier.dart';
 import 'package:ditonton/presentation/widgets/poster_card_list.dart';
 import 'package:ditonton/presentation/widgets/sub_heading.dart';
 import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeTvShowPage extends StatefulWidget {
   @override
@@ -21,11 +25,11 @@ class _HomeTvShowPageState extends State<HomeTvShowPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-        () => Provider.of<TvShowListNotifier>(context, listen: false)
-          ..fetchNowPlayingTvShows()
-          ..fetchPopularTvShows()
-          ..fetchTopRatedTvShows());
+    Future.microtask(() {
+      context.read<NowPlayingTvShowsCubit>().fetchData();
+      context.read<PopularTvShowsCubit>().fetchData();
+      context.read<TopRatedTvShowsCubit>().fetchData();
+    });
   }
 
   @override
@@ -53,52 +57,61 @@ class _HomeTvShowPageState extends State<HomeTvShowPage> {
                 HEADING_NOW_PLAYING,
                 style: kHeading6,
               ),
-              Consumer<TvShowListNotifier>(builder: (context, data, child) {
-                final state = data.nowPlayingState;
-                if (state == RequestState.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return TvShowList(data.nowPlayingTvShows);
-                } else {
-                  return ViewError(message: 'Failed');
-                }
-              }),
+              BlocBuilder<NowPlayingTvShowsCubit, NowPlayingTvShowsState>(
+                builder: (context, state) {
+                  if (state is NowPlayingTvShowsLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is NowPlayingTvShowsHasData) {
+                    return TvShowList(state.tvShows);
+                  } else if (state is NowPlayingTvShowsError) {
+                    return ViewError(message: 'Failed');
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
               SubHeading(
                 title: HEADING_POPULAR,
                 onTap: () =>
                     Navigator.pushNamed(context, PopularTvShowsPage.ROUTE_NAME),
               ),
-              Consumer<TvShowListNotifier>(builder: (context, data, child) {
-                final state = data.popularTvShowsState;
-                if (state == RequestState.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return TvShowList(data.popularTvShows);
-                } else {
-                  return ViewError(message: 'Failed');
-                }
-              }),
+              BlocBuilder<PopularTvShowsCubit, PopularTvShowsState>(
+                builder: (context, state) {
+                  if (state is PopularTvShowsLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is PopularTvShowsHasData) {
+                    return TvShowList(state.tvShows);
+                  } else if (state is PopularTvShowsError) {
+                    return ViewError(message: 'Failed');
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
               SubHeading(
                 title: HEADING_TOP_RATED,
                 onTap: () => Navigator.pushNamed(
                     context, TopRatedTvShowsPage.ROUTE_NAME),
               ),
-              Consumer<TvShowListNotifier>(builder: (context, data, child) {
-                final state = data.topRatedTvShowsState;
-                if (state == RequestState.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return TvShowList(data.topRatedTvShows);
-                } else {
-                  return ViewError(message: 'Failed');
-                }
-              }),
+              BlocBuilder<TopRatedTvShowsCubit, TopRatedTvShowsState>(
+                builder: (context, state) {
+                  if (state is TopRatedTvShowsLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is TopRatedTvShowsHasData) {
+                    return TvShowList(state.tvShows);
+                  } else if (state is TopRatedTvShowsError) {
+                    return ViewError(message: 'Failed');
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
             ],
           ),
         ),

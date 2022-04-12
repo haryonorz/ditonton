@@ -1,12 +1,12 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/menu_enum.dart';
-import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/presentation/cubit/top_rated_tv_shows/top_rated_tv_shows_cubit.dart';
+import 'package:ditonton/presentation/cubit/top_rated_tv_shows/top_rated_tv_shows_state.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
-import 'package:ditonton/presentation/provider/tv_show/top_rated_tv_shows_notifier.dart';
 import 'package:ditonton/presentation/widgets/content_card_list.dart';
 import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TopRatedTvShowsPage extends StatefulWidget {
   static const ROUTE_NAME = '/top-rated-tv-show';
@@ -19,9 +19,9 @@ class _TopRatedTvShowsPageState extends State<TopRatedTvShowsPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<TopRatedTvShowsNotifier>(context, listen: false)
-            .fetchTopRatedTvShows());
+    Future.microtask(
+      () => context.read<TopRatedTvShowsCubit>().fetchData(),
+    );
   }
 
   @override
@@ -32,29 +32,35 @@ class _TopRatedTvShowsPageState extends State<TopRatedTvShowsPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<TopRatedTvShowsNotifier>(
-          builder: (context, data, child) {
-            if (data.state == RequestState.Loading) {
+        child: BlocBuilder<TopRatedTvShowsCubit, TopRatedTvShowsState>(
+          builder: (context, state) {
+            if (state is TopRatedTvShowsLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.state == RequestState.Loaded) {
+            } else if (state is TopRatedTvShowsEmpty) {
+              return Center(
+                child: ViewError(message: 'No Data'),
+              );
+            } else if (state is TopRatedTvShowsHasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tvShow = data.tvShows[index];
+                  final tvShow = state.tvShows[index];
                   return ContentCard(
                     activeMenu: MenuItem.TvShow,
                     tvShow: tvShow,
                     routeName: TvShowDetailPage.ROUTE_NAME,
                   );
                 },
-                itemCount: data.tvShows.length,
+                itemCount: state.tvShows.length,
               );
-            } else {
+            } else if (state is TopRatedTvShowsError) {
               return Center(
                 key: Key('error_message'),
-                child: ViewError(message: data.message),
+                child: ViewError(message: state.message),
               );
+            } else {
+              return Container();
             }
           },
         ),

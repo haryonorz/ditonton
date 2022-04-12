@@ -1,6 +1,5 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/menu_enum.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/presentation/bloc/search_bloc.dart';
@@ -8,13 +7,10 @@ import 'package:ditonton/presentation/bloc/search_event.dart';
 import 'package:ditonton/presentation/bloc/search_state.dart';
 import 'package:ditonton/presentation/cubit/menu_cubit.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
-import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
-import 'package:ditonton/presentation/provider/search_notifier.dart';
 import 'package:ditonton/presentation/widgets/content_card_list.dart';
 import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
   static const ROUTE_NAME = '/search';

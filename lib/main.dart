@@ -3,6 +3,18 @@ import 'package:ditonton/common/http_ssl_pinning.dart';
 import 'package:ditonton/common/menu_enum.dart';
 import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/presentation/bloc/search_bloc.dart';
+import 'package:ditonton/presentation/cubit/movie_detail/movie_detail_cubit.dart';
+import 'package:ditonton/presentation/cubit/movie_recommendations/movie_recommendations_cubit.dart';
+import 'package:ditonton/presentation/cubit/now_playing_movies/now_playing_movies_cubit.dart';
+import 'package:ditonton/presentation/cubit/now_playing_tv_shows/now_playing_tv_shows_cubit.dart';
+import 'package:ditonton/presentation/cubit/popular_movies/popular_movies_cubit.dart';
+import 'package:ditonton/presentation/cubit/popular_tv_shows/popular_tv_shows_cubit.dart';
+import 'package:ditonton/presentation/cubit/top_rated_movies/top_rated_movies_cubit.dart';
+import 'package:ditonton/presentation/cubit/top_rated_tv_shows/top_rated_tv_shows_cubit.dart';
+import 'package:ditonton/presentation/cubit/tv_show_detail/tv_show_detail_cubit.dart';
+import 'package:ditonton/presentation/cubit/tv_show_recommendations/tv_show_recommendations_cubit.dart';
+import 'package:ditonton/presentation/cubit/watchlist_movie/watchlist_movie_cubit.dart';
+import 'package:ditonton/presentation/cubit/watchlist_tv_show/watchlist_tv_show_cubit.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/home_tv_show_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
@@ -14,17 +26,6 @@ import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_tv_shows_page.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_page.dart';
-import 'package:ditonton/presentation/provider/movie/movie_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/movie/movie_list_notifier.dart';
-import 'package:ditonton/presentation/provider/search_notifier.dart';
-import 'package:ditonton/presentation/provider/movie/popular_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/movie/top_rated_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/movie/watchlist_movie_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_show/popular_tv_shows_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_show/top_rated_tv_shows_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_show/tv_show_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_show/tv_show_list_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_show/watchlist_tv_show_notifier.dart';
 import 'package:ditonton/presentation/widgets/custom_darawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,41 +47,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieListNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieDetailNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<SearchNotifier>(),
-        ),
+        BlocProvider(create: (_) => di.locator<NowPlayingMoviesCubit>()),
+        BlocProvider(create: (_) => di.locator<MovieDetailCubit>()),
+        BlocProvider(create: (_) => di.locator<MovieRecommendationsCubit>()),
         BlocProvider(create: (_) => di.locator<SearchMovieBloc>()),
+        BlocProvider(create: (_) => di.locator<PopularMoviesCubit>()),
+        BlocProvider(create: (_) => di.locator<TopRatedMoviesCubit>()),
+        BlocProvider(create: (_) => di.locator<WatchlistMovieCubit>()),
+        BlocProvider(create: (_) => di.locator<NowPlayingTvShowsCubit>()),
+        BlocProvider(create: (_) => di.locator<TvShowDetailCubit>()),
+        BlocProvider(create: (_) => di.locator<TvShowRecommendationsCubit>()),
         BlocProvider(create: (_) => di.locator<SearchTvShowBloc>()),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedMoviesNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<PopularMoviesNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistMovieNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TvShowListNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TvShowDetailNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedTvShowsNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<PopularTvShowsNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistTvShowNotifier>(),
-        ),
+        BlocProvider(create: (_) => di.locator<PopularTvShowsCubit>()),
+        BlocProvider(create: (_) => di.locator<TopRatedTvShowsCubit>()),
+        BlocProvider(create: (_) => di.locator<WatchlistTvShowCubit>()),
         BlocProvider(create: (_) => di.locator<MenuCubit>()),
       ],
       child: MaterialApp(

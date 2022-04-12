@@ -1,12 +1,12 @@
 import 'package:ditonton/common/menu_enum.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/common/utils.dart';
+import 'package:ditonton/presentation/cubit/watchlist_tv_show/watchlist_tv_show_cubit.dart';
+import 'package:ditonton/presentation/cubit/watchlist_tv_show/watchlist_tv_show_state.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
-import 'package:ditonton/presentation/provider/tv_show/watchlist_tv_show_notifier.dart';
 import 'package:ditonton/presentation/widgets/content_card_list.dart';
 import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WatchlistTvShowsPage extends StatefulWidget {
   @override
@@ -18,9 +18,9 @@ class _WatchlistTvShowsPageState extends State<WatchlistTvShowsPage>
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<WatchlistTvShowNotifier>(context, listen: false)
-            .fetchWatchlistTvShows());
+    Future.microtask(
+      () => context.read<WatchlistTvShowCubit>().fetchData(),
+    );
   }
 
   @override
@@ -30,40 +30,42 @@ class _WatchlistTvShowsPageState extends State<WatchlistTvShowsPage>
   }
 
   void didPopNext() {
-    Provider.of<WatchlistTvShowNotifier>(context, listen: false)
-        .fetchWatchlistTvShows();
+    context.read<WatchlistTvShowCubit>().fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Consumer<WatchlistTvShowNotifier>(
-        builder: (context, data, child) {
-          if (data.watchlistState == RequestState.Loading) {
+      child: BlocBuilder<WatchlistTvShowCubit, WatchlistTvShowState>(
+        builder: (context, state) {
+          if (state is WatchlistTvShowLoading) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (data.watchlistState == RequestState.Loaded) {
-            if (data.watchlistTvShows.isEmpty)
-              return Center(child: ViewError(message: 'No Data'));
-
+          } else if (state is WatchlistTvShowEmpty) {
+            return Center(
+              child: ViewError(message: 'No Data'),
+            );
+          } else if (state is WatchlistTvShowHasData) {
             return ListView.builder(
               itemBuilder: (context, index) {
-                final tvShow = data.watchlistTvShows[index];
+                final tvShow = state.tvShows[index];
                 return ContentCard(
                   activeMenu: MenuItem.TvShow,
                   tvShow: tvShow,
                   routeName: TvShowDetailPage.ROUTE_NAME,
                 );
               },
-              itemCount: data.watchlistTvShows.length,
+              itemCount: state.tvShows.length,
             );
-          } else {
+          } else if (state is WatchlistTvShowError) {
             return Center(
               key: Key('error_message'),
-              child: ViewError(message: data.message),
+              child: ViewError(message: state.message),
             );
+          } else {
+            return Container();
           }
         },
       ),

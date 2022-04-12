@@ -10,6 +10,8 @@ const APP_NAME = 'Ditonton';
 const HEADING_NOW_PLAYING = 'Now Playing';
 const HEADING_POPULAR = 'Popular';
 const HEADING_TOP_RATED = 'Top Rated';
+const watchlistAddSuccessMessage = 'Added to Watchlist';
+const watchlistRemoveSuccessMessage = 'Removed from Watchlist';
 
 // colors
 const Color kRichBlack = Color(0xFF000814);

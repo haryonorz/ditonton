@@ -1,12 +1,12 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/menu_enum.dart';
-import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/presentation/cubit/popular_tv_shows/popular_tv_shows_cubit.dart';
+import 'package:ditonton/presentation/cubit/popular_tv_shows/popular_tv_shows_state.dart';
 import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
-import 'package:ditonton/presentation/provider/tv_show/popular_tv_shows_notifier.dart';
 import 'package:ditonton/presentation/widgets/content_card_list.dart';
 import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PopularTvShowsPage extends StatefulWidget {
   static const ROUTE_NAME = '/popular-tv-show';
@@ -19,9 +19,7 @@ class _PopularTvShowsPageState extends State<PopularTvShowsPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<PopularTvShowsNotifier>(context, listen: false)
-            .fetchPopularTvShows());
+    Future.microtask(() => context.read<PopularTvShowsCubit>().fetchData());
   }
 
   @override
@@ -32,29 +30,35 @@ class _PopularTvShowsPageState extends State<PopularTvShowsPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<PopularTvShowsNotifier>(
-          builder: (context, data, child) {
-            if (data.state == RequestState.Loading) {
+        child: BlocBuilder<PopularTvShowsCubit, PopularTvShowsState>(
+          builder: (context, state) {
+            if (state is PopularTvShowsLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.state == RequestState.Loaded) {
+            } else if (state is PopularTvShowsEmpty) {
+              return Center(
+                child: ViewError(message: 'No Data'),
+              );
+            } else if (state is PopularTvShowsHasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tvShow = data.tvShows[index];
+                  final tvShow = state.tvShows[index];
                   return ContentCard(
                     activeMenu: MenuItem.TvShow,
                     tvShow: tvShow,
                     routeName: TvShowDetailPage.ROUTE_NAME,
                   );
                 },
-                itemCount: data.tvShows.length,
+                itemCount: state.tvShows.length,
               );
-            } else {
+            } else if (state is PopularTvShowsError) {
               return Center(
                 key: Key('error_message'),
-                child: ViewError(message: data.message),
+                child: ViewError(message: state.message),
               );
+            } else {
+              return Container();
             }
           },
         ),

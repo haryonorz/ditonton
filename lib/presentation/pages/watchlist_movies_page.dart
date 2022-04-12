@@ -1,12 +1,12 @@
 import 'package:ditonton/common/menu_enum.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/common/utils.dart';
+import 'package:ditonton/presentation/cubit/watchlist_movie/watchlist_movie_cubit.dart';
+import 'package:ditonton/presentation/cubit/watchlist_movie/watchlist_movie_state.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
-import 'package:ditonton/presentation/provider/movie/watchlist_movie_notifier.dart';
 import 'package:ditonton/presentation/widgets/content_card_list.dart';
 import 'package:ditonton/presentation/widgets/view_error.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WatchlistMoviesPage extends StatefulWidget {
   @override
@@ -18,9 +18,9 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<WatchlistMovieNotifier>(context, listen: false)
-            .fetchWatchlistMovies());
+    Future.microtask(
+      () => context.read<WatchlistMovieCubit>().fetchData(),
+    );
   }
 
   @override
@@ -30,40 +30,42 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
   }
 
   void didPopNext() {
-    Provider.of<WatchlistMovieNotifier>(context, listen: false)
-        .fetchWatchlistMovies();
+    context.read<WatchlistMovieCubit>().fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Consumer<WatchlistMovieNotifier>(
-        builder: (context, data, child) {
-          if (data.watchlistState == RequestState.Loading) {
+      child: BlocBuilder<WatchlistMovieCubit, WatchlistMovieState>(
+        builder: (context, state) {
+          if (state is WatchlistMovieLoading) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (data.watchlistState == RequestState.Loaded) {
-            if (data.watchlistMovies.isEmpty)
-              return Center(child: ViewError(message: 'No Data'));
-
+          } else if (state is WatchlistMovieEmpty) {
+            return Center(
+              child: ViewError(message: 'No Data'),
+            );
+          } else if (state is WatchlistMovieHasData) {
             return ListView.builder(
               itemBuilder: (context, index) {
-                final movie = data.watchlistMovies[index];
+                final movie = state.movies[index];
                 return ContentCard(
                   activeMenu: MenuItem.Movie,
                   movie: movie,
                   routeName: MovieDetailPage.ROUTE_NAME,
                 );
               },
-              itemCount: data.watchlistMovies.length,
+              itemCount: state.movies.length,
             );
-          } else {
+          } else if (state is WatchlistMovieError) {
             return Center(
               key: Key('error_message'),
-              child: ViewError(message: data.message),
+              child: ViewError(message: state.message),
             );
+          } else {
+            return Container();
           }
         },
       ),
