@@ -40,10 +40,10 @@ class WatchlistMovieCubit extends Cubit<WatchlistMovieState> {
 
     result.fold(
       (failure) {
-        WatchlistMovieMessage(failure.message);
+        emit(WatchlistMovieMessage(failure.message));
       },
       (successMessage) {
-        WatchlistMovieMessage(successMessage);
+        emit(WatchlistMovieMessage(successMessage));
       },
     );
 
@@ -55,10 +55,10 @@ class WatchlistMovieCubit extends Cubit<WatchlistMovieState> {
 
     result.fold(
       (failure) {
-        WatchlistMovieMessage(failure.message);
+        emit(WatchlistMovieMessage(failure.message));
       },
       (successMessage) {
-        WatchlistMovieMessage(successMessage);
+        emit(WatchlistMovieMessage(successMessage));
       },
     );
 
