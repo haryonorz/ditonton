@@ -38,6 +38,7 @@ class _PopularTvShowsPageState extends State<PopularTvShowsPage> {
               );
             } else if (state is PopularTvShowsEmpty) {
               return Center(
+                key: Key('empty'),
                 child: ViewError(message: 'No Data'),
               );
             } else if (state is PopularTvShowsHasData) {

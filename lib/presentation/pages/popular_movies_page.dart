@@ -38,6 +38,7 @@ class _PopularMoviesPageState extends State<PopularMoviesPage> {
               );
             } else if (state is PopularMoviesEmpty) {
               return Center(
+                key: Key('empty'),
                 child: ViewError(message: 'No Data'),
               );
             } else if (state is PopularMoviesHasData) {

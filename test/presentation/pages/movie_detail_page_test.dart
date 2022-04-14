@@ -1,6 +1,8 @@
+import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/presentation/cubit/movie_detail/movie_detail_cubit.dart';
 import 'package:ditonton/presentation/cubit/movie_detail/movie_detail_state.dart';
 import 'package:ditonton/presentation/cubit/movie_recommendations/movie_recommendations_cubit.dart';
+import 'package:ditonton/presentation/cubit/movie_recommendations/movie_recommendations_state.dart';
 import 'package:ditonton/presentation/cubit/watchlist_movie/watchlist_movie_cubit.dart';
 import 'package:ditonton/presentation/cubit/watchlist_movie/watchlist_movie_state.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
@@ -36,10 +38,10 @@ void main() {
         BlocProvider<MovieDetailCubit>(
           create: (_) => mockMovieDetailCubit,
         ),
-        BlocProvider<MockWatchlistMovieCubit>(
+        BlocProvider<WatchlistMovieCubit>(
           create: (_) => mockWatchlistMovieCubit,
         ),
-        BlocProvider<MockMovieRecommendationsCubit>(
+        BlocProvider<MovieRecommendationsCubit>(
           create: (_) => mockMovieRecommendationsCubit,
         ),
       ],
@@ -58,6 +60,10 @@ void main() {
         .thenAnswer((_) => Stream.value(MovieIsAddedToWatchlist(false)));
     when(mockWatchlistMovieCubit.state)
         .thenReturn(MovieIsAddedToWatchlist(false));
+    when(mockMovieRecommendationsCubit.stream).thenAnswer(
+        (_) => Stream.value(MovieRecommendationsHasData(<Movie>[])));
+    when(mockMovieRecommendationsCubit.state)
+        .thenReturn(MovieRecommendationsHasData(<Movie>[]));
 
     final progressBarFinder = find.byType(CircularProgressIndicator);
     final centerFinder = find.byType(Center);
@@ -74,6 +80,14 @@ void main() {
         .thenAnswer((_) => Stream.value(MovieDetailError('Error message')));
     when(mockMovieDetailCubit.state)
         .thenReturn(MovieDetailError('Error message'));
+    when(mockWatchlistMovieCubit.stream)
+        .thenAnswer((_) => Stream.value(MovieIsAddedToWatchlist(false)));
+    when(mockWatchlistMovieCubit.state)
+        .thenReturn(MovieIsAddedToWatchlist(false));
+    when(mockMovieRecommendationsCubit.stream).thenAnswer(
+        (_) => Stream.value(MovieRecommendationsError('Error message')));
+    when(mockMovieRecommendationsCubit.state)
+        .thenReturn(MovieRecommendationsError('Error message'));
 
     final textFinder = find.byKey(Key('error_message'));
 
@@ -93,6 +107,10 @@ void main() {
         .thenAnswer((_) => Stream.value(MovieIsAddedToWatchlist(false)));
     when(mockWatchlistMovieCubit.state)
         .thenReturn(MovieIsAddedToWatchlist(false));
+    when(mockMovieRecommendationsCubit.stream).thenAnswer(
+        (_) => Stream.value(MovieRecommendationsHasData(<Movie>[])));
+    when(mockMovieRecommendationsCubit.state)
+        .thenReturn(MovieRecommendationsHasData(<Movie>[]));
 
     final watchlistButtonIcon = find.byIcon(Icons.add);
 
@@ -112,6 +130,10 @@ void main() {
         .thenAnswer((_) => Stream.value(MovieIsAddedToWatchlist(true)));
     when(mockWatchlistMovieCubit.state)
         .thenReturn(MovieIsAddedToWatchlist(true));
+    when(mockMovieRecommendationsCubit.stream).thenAnswer(
+        (_) => Stream.value(MovieRecommendationsHasData(<Movie>[])));
+    when(mockMovieRecommendationsCubit.state)
+        .thenReturn(MovieRecommendationsHasData(<Movie>[]));
 
     final watchlistButtonIcon = find.byIcon(Icons.check);
 
@@ -131,6 +153,10 @@ void main() {
         .thenAnswer((_) => Stream.value(MovieIsAddedToWatchlist(false)));
     when(mockWatchlistMovieCubit.state)
         .thenReturn(MovieIsAddedToWatchlist(false));
+    when(mockMovieRecommendationsCubit.stream).thenAnswer(
+        (_) => Stream.value(MovieRecommendationsHasData(<Movie>[])));
+    when(mockMovieRecommendationsCubit.state)
+        .thenReturn(MovieRecommendationsHasData(<Movie>[]));
     when(mockWatchlistMovieCubit.stream).thenAnswer(
         (_) => Stream.value(WatchlistMovieMessage('Added to Watchlist')));
     when(mockWatchlistMovieCubit.state)
@@ -160,18 +186,76 @@ void main() {
         .thenAnswer((_) => Stream.value(MovieIsAddedToWatchlist(false)));
     when(mockWatchlistMovieCubit.state)
         .thenReturn(MovieIsAddedToWatchlist(false));
+    when(mockMovieRecommendationsCubit.stream).thenAnswer(
+        (_) => Stream.value(MovieRecommendationsHasData(<Movie>[])));
+    when(mockMovieRecommendationsCubit.state)
+        .thenReturn(MovieRecommendationsHasData(<Movie>[]));
     when(mockWatchlistMovieCubit.stream)
         .thenAnswer((_) => Stream.value(WatchlistMovieMessage('Failed')));
     when(mockWatchlistMovieCubit.state)
         .thenReturn(WatchlistMovieMessage('Failed'));
 
+    await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
+
+    expect(find.byIcon(Icons.add), findsOneWidget);
+    await tester.pump();
+
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.text('Failed'), findsOneWidget);
+  });
+
+  testWidgets(
+      'Watchlist button should display Snackbar when remove from watchlist',
+      (WidgetTester tester) async {
+    when(mockMovieDetailCubit.stream)
+        .thenAnswer((_) => Stream.value(MovieDetailHasData(testMovieDetail)));
+    when(mockMovieDetailCubit.state)
+        .thenReturn(MovieDetailHasData(testMovieDetail));
+    when(mockWatchlistMovieCubit.stream)
+        .thenAnswer((_) => Stream.value(MovieIsAddedToWatchlist(true)));
+    when(mockWatchlistMovieCubit.state)
+        .thenReturn(MovieIsAddedToWatchlist(true));
+    when(mockMovieRecommendationsCubit.stream).thenAnswer(
+        (_) => Stream.value(MovieRecommendationsHasData(<Movie>[])));
+    when(mockMovieRecommendationsCubit.state)
+        .thenReturn(MovieRecommendationsHasData(<Movie>[]));
+    when(mockWatchlistMovieCubit.stream).thenAnswer(
+        (_) => Stream.value(WatchlistMovieMessage('Removed from Watchlist')));
+    when(mockWatchlistMovieCubit.state)
+        .thenReturn(WatchlistMovieMessage('Removed from Watchlist'));
+
     final watchlistButton = find.byType(ElevatedButton);
 
     await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
 
-    expect(find.byIcon(Icons.add), findsOneWidget);
-
     await tester.tap(watchlistButton);
+    await tester.pump();
+
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.text('Removed from Watchlist'), findsOneWidget);
+  });
+
+  testWidgets(
+      'Watchlist button should display AlertDialog when remove from watchlist failed',
+      (WidgetTester tester) async {
+    when(mockMovieDetailCubit.stream)
+        .thenAnswer((_) => Stream.value(MovieDetailHasData(testMovieDetail)));
+    when(mockMovieDetailCubit.state)
+        .thenReturn(MovieDetailHasData(testMovieDetail));
+    when(mockWatchlistMovieCubit.stream)
+        .thenAnswer((_) => Stream.value(MovieIsAddedToWatchlist(true)));
+    when(mockWatchlistMovieCubit.state)
+        .thenReturn(MovieIsAddedToWatchlist(true));
+    when(mockMovieRecommendationsCubit.stream).thenAnswer(
+        (_) => Stream.value(MovieRecommendationsHasData(<Movie>[])));
+    when(mockMovieRecommendationsCubit.state)
+        .thenReturn(MovieRecommendationsHasData(<Movie>[]));
+    when(mockWatchlistMovieCubit.stream)
+        .thenAnswer((_) => Stream.value(WatchlistMovieMessage('Failed')));
+    when(mockWatchlistMovieCubit.state)
+        .thenReturn(WatchlistMovieMessage('Failed'));
+
+    await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
     await tester.pump();
 
     expect(find.byType(AlertDialog), findsOneWidget);

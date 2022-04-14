@@ -40,6 +40,7 @@ class _TopRatedMoviesPageState extends State<TopRatedMoviesPage> {
               );
             } else if (state is TopRatedMoviesEmpty) {
               return Center(
+                key: Key('empty'),
                 child: ViewError(message: 'No Data'),
               );
             } else if (state is TopRatedMoviesHasData) {

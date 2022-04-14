@@ -92,7 +92,7 @@ void main() {
       },
     );
     blocTest<WatchlistMovieCubit, WatchlistMovieState>(
-      'should emit [message, true] when save watchlist succeeded and get watchlist status',
+      'should emit [message, true] when save watchlist succeeded ',
       build: () {
         when(mockSaveWatchlistMovie.execute(testMovieDetail))
             .thenAnswer((_) async => Right(watchlistAddSuccessMessage));
@@ -109,7 +109,24 @@ void main() {
       },
     );
     blocTest<WatchlistMovieCubit, WatchlistMovieState>(
-      'should emit [message, false] when remove watchlist succeeded and get watchlist status',
+      'should emit [message, true] when save watchlist failed ',
+      build: () {
+        when(mockSaveWatchlistMovie.execute(testMovieDetail))
+            .thenAnswer((_) async => Left(DatabaseFailure("Can't input data")));
+        return watchlistMovieCubit;
+      },
+      act: (cubit) {
+        cubit.addToWatchlist(testMovieDetail);
+      },
+      expect: () => [
+        WatchlistMovieMessage("Can't input data"),
+      ],
+      verify: (cubit) {
+        verify(mockSaveWatchlistMovie.execute(testMovieDetail));
+      },
+    );
+    blocTest<WatchlistMovieCubit, WatchlistMovieState>(
+      'should emit [message, false] when remove watchlist succeeded',
       build: () {
         when(mockRemoveWatchlistMovie.execute(testMovieDetail))
             .thenAnswer((_) async => Right(watchlistAddSuccessMessage));
@@ -126,4 +143,21 @@ void main() {
       },
     );
   });
+  blocTest<WatchlistMovieCubit, WatchlistMovieState>(
+    'should emit [message, true] when remove watchlist failed ',
+    build: () {
+      when(mockRemoveWatchlistMovie.execute(testMovieDetail))
+          .thenAnswer((_) async => Left(DatabaseFailure("Can't delete data")));
+      return watchlistMovieCubit;
+    },
+    act: (cubit) {
+      cubit.removeFromWatchlist(testMovieDetail);
+    },
+    expect: () => [
+      WatchlistMovieMessage("Can't delete data"),
+    ],
+    verify: (cubit) {
+      verify(mockRemoveWatchlistMovie.execute(testMovieDetail));
+    },
+  );
 }

@@ -125,4 +125,5 @@ final testTvShowMap = {
   'overview': 'overview',
   'posterPath': 'posterPath',
   'name': 'name',
+  'title': 'name',
 };

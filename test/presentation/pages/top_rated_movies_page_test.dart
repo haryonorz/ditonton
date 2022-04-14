@@ -44,6 +44,21 @@ void main() {
     expect(progressFinder, findsOneWidget);
   });
 
+  testWidgets('Page should display text no data when empty',
+      (WidgetTester tester) async {
+    when(mockTopRatedMoviesCubit.stream)
+        .thenAnswer((_) => Stream.value(TopRatedMoviesEmpty()));
+    when(mockTopRatedMoviesCubit.state).thenReturn(TopRatedMoviesEmpty());
+
+    final textFinder = find.byKey(Key('empty'));
+    final centerFinder = find.byType(Center);
+
+    await tester.pumpWidget(_makeTestableWidget(TopRatedMoviesPage()));
+
+    expect(centerFinder, findsOneWidget);
+    expect(textFinder, findsOneWidget);
+  });
+
   testWidgets('Page should display when data is loaded',
       (WidgetTester tester) async {
     when(mockTopRatedMoviesCubit.stream)

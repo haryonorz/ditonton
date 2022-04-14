@@ -40,6 +40,7 @@ class _TopRatedTvShowsPageState extends State<TopRatedTvShowsPage> {
               );
             } else if (state is TopRatedTvShowsEmpty) {
               return Center(
+                key: Key('empty'),
                 child: ViewError(message: 'No Data'),
               );
             } else if (state is TopRatedTvShowsHasData) {

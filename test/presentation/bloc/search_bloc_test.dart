@@ -69,6 +69,24 @@ void main() {
       expect(searchMovieBloc.state, SearchEmpty());
     });
     blocTest<SearchMovieBloc, SearchState>(
+      'should emit [Loading, Empty] when no data',
+      build: () {
+        when(mockSearchMovies.execute(tQueryMovie))
+            .thenAnswer((_) async => Right(<Movie>[]));
+        return searchMovieBloc;
+      },
+      act: (bloc) => bloc.add(OnQueryChanged(tQueryMovie)),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [
+        SearchLoading(),
+        SearchHasData(<Movie>[]),
+        SearchEmpty(),
+      ],
+      verify: (bloc) {
+        verify(mockSearchMovies.execute(tQueryMovie));
+      },
+    );
+    blocTest<SearchMovieBloc, SearchState>(
       'should emit [Loading, HasData] when data is gotten successfully',
       build: () {
         when(mockSearchMovies.execute(tQueryMovie))
@@ -108,6 +126,24 @@ void main() {
     test('initial state should be empty', () {
       expect(searchTvShowBloc.state, SearchEmpty());
     });
+    blocTest<SearchTvShowBloc, SearchState>(
+      'should emit [Loading, Empty] when no data',
+      build: () {
+        when(mockSearchTvShows.execute(tQueryTvShow))
+            .thenAnswer((_) async => Right(<TvShow>[]));
+        return searchTvShowBloc;
+      },
+      act: (bloc) => bloc.add(OnQueryChanged(tQueryTvShow)),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [
+        SearchLoading(),
+        SearchHasData(<TvShow>[]),
+        SearchEmpty(),
+      ],
+      verify: (bloc) {
+        verify(mockSearchTvShows.execute(tQueryTvShow));
+      },
+    );
     blocTest<SearchTvShowBloc, SearchState>(
       'should emit [Loading, HasData] when data is gotten successfully',
       build: () {
