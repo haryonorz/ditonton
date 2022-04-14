@@ -16,7 +16,7 @@ import 'top_rated_movies_page_test.mocks.dart';
 void main() {
   late MockTopRatedMoviesCubit mockTopRatedMoviesCubit;
 
-  setUpAll(() {
+  setUp(() {
     mockTopRatedMoviesCubit = MockTopRatedMoviesCubit();
   });
 
@@ -29,12 +29,10 @@ void main() {
     );
   }
 
-  tearDown(() {
-    mockTopRatedMoviesCubit.close();
-  });
-
   testWidgets('Page should display progress bar when loading',
       (WidgetTester tester) async {
+    when(mockTopRatedMoviesCubit.stream)
+        .thenAnswer((_) => Stream.value(TopRatedMoviesLoading()));
     when(mockTopRatedMoviesCubit.state).thenReturn(TopRatedMoviesLoading());
 
     final progressFinder = find.byType(CircularProgressIndicator);
@@ -48,6 +46,8 @@ void main() {
 
   testWidgets('Page should display when data is loaded',
       (WidgetTester tester) async {
+    when(mockTopRatedMoviesCubit.stream)
+        .thenAnswer((_) => Stream.value(TopRatedMoviesHasData(<Movie>[])));
     when(mockTopRatedMoviesCubit.state)
         .thenReturn(TopRatedMoviesHasData(<Movie>[]));
 
@@ -60,8 +60,10 @@ void main() {
 
   testWidgets('Page should display ListView Item when data is loaded',
       (WidgetTester tester) async {
+    when(mockTopRatedMoviesCubit.stream)
+        .thenAnswer((_) => Stream.value(TopRatedMoviesHasData(testMovieList)));
     when(mockTopRatedMoviesCubit.state)
-        .thenReturn(TopRatedMoviesHasData([testMovie]));
+        .thenReturn(TopRatedMoviesHasData(testMovieList));
 
     final content = find.byType(ContentCard);
 
@@ -72,6 +74,8 @@ void main() {
 
   testWidgets('Page should display text with message when Error',
       (WidgetTester tester) async {
+    when(mockTopRatedMoviesCubit.stream)
+        .thenAnswer((_) => Stream.value(TopRatedMoviesError('Error message')));
     when(mockTopRatedMoviesCubit.state)
         .thenReturn(TopRatedMoviesError('Error message'));
 

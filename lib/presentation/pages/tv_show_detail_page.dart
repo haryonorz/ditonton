@@ -38,34 +38,57 @@ class _TvShowDetailPagePageState extends State<TvShowDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<TvShowDetailCubit, TvShowDetailState>(
-        builder: (context, state) {
-          if (state is TvShowDetailLoading) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is TvShowDetailHasData) {
-            final tvShow = state.tvShow;
-            return SafeArea(
-              child: BlocBuilder<WatchlistTvShowCubit, WatchlistTvShowState>(
-                  builder: (context, state) {
-                bool isAddedWatchlist = false;
-                if (state is TvShowIsAddedToWatchlist) {
-                  isAddedWatchlist = state.isAdded;
-                }
-                return DetailContent(tvShow, isAddedWatchlist);
-              }),
-            );
-          } else if (state is TvShowDetailError) {
-            return ViewError(
-              key: Key('error_message'),
-              message: state.message,
+    return BlocListener<WatchlistTvShowCubit, WatchlistTvShowState>(
+      listener: (context, state) {
+        if (state is WatchlistTvShowMessage) {
+          if (state.message == watchlistAddSuccessMessage ||
+              state.message == watchlistRemoveSuccessMessage) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
             );
           } else {
-            return Container();
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Text(state.message),
+                );
+              },
+            );
           }
-        },
+        }
+      },
+      child: Scaffold(
+        body: BlocBuilder<TvShowDetailCubit, TvShowDetailState>(
+          builder: (context, state) {
+            if (state is TvShowDetailLoading) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is TvShowDetailHasData) {
+              final tvShow = state.tvShow;
+              return SafeArea(
+                child: BlocBuilder<WatchlistTvShowCubit, WatchlistTvShowState>(
+                    builder: (context, state) {
+                  bool isAddedWatchlist = false;
+                  if (state is TvShowIsAddedToWatchlist) {
+                    isAddedWatchlist = state.isAdded;
+                  }
+                  return DetailContent(tvShow, isAddedWatchlist);
+                }),
+              );
+            } else if (state is TvShowDetailError) {
+              return ViewError(
+                key: Key('error_message'),
+                message: state.message,
+              );
+            } else {
+              return Container();
+            }
+          },
+        ),
       ),
     );
   }
@@ -120,29 +143,13 @@ class DetailContent extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () {
                                 if (!isAddedWatchlist) {
-                                  context
-                                      .read<WatchlistTvShowCubit>()
-                                      .addToWatchlist(tvShow);
+                                  context.read<WatchlistTvShowCubit>()
+                                    ..addToWatchlist(tvShow)
+                                    ..loadWatchlistStatus(tvShow.id);
                                 } else {
-                                  context
-                                      .read<WatchlistTvShowCubit>()
-                                      .removeFromWatchlist(tvShow);
-                                }
-
-                                final state = Provider.of<WatchlistTvShowCubit>(
-                                        context,
-                                        listen: false)
-                                    .state;
-
-                                if (state is TvShowIsAddedToWatchlist) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: Text(
-                                      state.isAdded
-                                          ? watchlistRemoveSuccessMessage
-                                          : watchlistAddSuccessMessage,
-                                    ),
-                                  ));
+                                  context.read<WatchlistTvShowCubit>()
+                                    ..removeFromWatchlist(tvShow)
+                                    ..loadWatchlistStatus(tvShow.id);
                                 }
                               },
                               child: Row(

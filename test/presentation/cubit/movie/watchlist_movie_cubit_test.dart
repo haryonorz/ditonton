@@ -96,21 +96,16 @@ void main() {
       build: () {
         when(mockSaveWatchlistMovie.execute(testMovieDetail))
             .thenAnswer((_) async => Right(watchlistAddSuccessMessage));
-        when(mockGetWatchListStatusMovie.execute(1))
-            .thenAnswer((_) async => true);
         return watchlistMovieCubit;
       },
       act: (cubit) {
         cubit.addToWatchlist(testMovieDetail);
-        cubit.loadWatchlistStatus(1);
       },
       expect: () => [
         WatchlistMovieMessage(watchlistAddSuccessMessage),
-        MovieIsAddedToWatchlist(true),
       ],
       verify: (cubit) {
         verify(mockSaveWatchlistMovie.execute(testMovieDetail));
-        verify(mockGetWatchListStatusMovie.execute(1));
       },
     );
     blocTest<WatchlistMovieCubit, WatchlistMovieState>(
@@ -118,21 +113,16 @@ void main() {
       build: () {
         when(mockRemoveWatchlistMovie.execute(testMovieDetail))
             .thenAnswer((_) async => Right(watchlistAddSuccessMessage));
-        when(mockGetWatchListStatusMovie.execute(1))
-            .thenAnswer((_) async => false);
         return watchlistMovieCubit;
       },
       act: (cubit) {
         cubit.removeFromWatchlist(testMovieDetail);
-        cubit.loadWatchlistStatus(1);
       },
       expect: () => [
         WatchlistMovieMessage(watchlistAddSuccessMessage),
-        MovieIsAddedToWatchlist(false),
       ],
       verify: (cubit) {
         verify(mockRemoveWatchlistMovie.execute(testMovieDetail));
-        verify(mockGetWatchListStatusMovie.execute(1));
       },
     );
   });

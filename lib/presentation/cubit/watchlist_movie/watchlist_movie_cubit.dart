@@ -46,8 +46,6 @@ class WatchlistMovieCubit extends Cubit<WatchlistMovieState> {
         emit(WatchlistMovieMessage(successMessage));
       },
     );
-
-    loadWatchlistStatus(movie.id);
   }
 
   void removeFromWatchlist(MovieDetail movie) async {
@@ -61,8 +59,6 @@ class WatchlistMovieCubit extends Cubit<WatchlistMovieState> {
         emit(WatchlistMovieMessage(successMessage));
       },
     );
-
-    loadWatchlistStatus(movie.id);
   }
 
   void loadWatchlistStatus(int id) async {

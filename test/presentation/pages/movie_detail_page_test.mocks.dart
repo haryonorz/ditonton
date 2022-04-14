@@ -2,13 +2,22 @@
 // in ditonton/test/presentation/pages/movie_detail_page_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i4;
+import 'dart:async' as _i6;
 
+import 'package:ditonton/domain/entities/movie_detail.dart' as _i9;
 import 'package:ditonton/presentation/cubit/movie_detail/movie_detail_cubit.dart'
-    as _i3;
+    as _i5;
 import 'package:ditonton/presentation/cubit/movie_detail/movie_detail_state.dart'
     as _i2;
-import 'package:flutter_bloc/flutter_bloc.dart' as _i5;
+import 'package:ditonton/presentation/cubit/movie_recommendations/movie_recommendations_cubit.dart'
+    as _i10;
+import 'package:ditonton/presentation/cubit/movie_recommendations/movie_recommendations_state.dart'
+    as _i4;
+import 'package:ditonton/presentation/cubit/watchlist_movie/watchlist_movie_cubit.dart'
+    as _i8;
+import 'package:ditonton/presentation/cubit/watchlist_movie/watchlist_movie_state.dart'
+    as _i3;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -24,10 +33,16 @@ import 'package:mockito/mockito.dart' as _i1;
 class _FakeMovieDetailState_0 extends _i1.Fake implements _i2.MovieDetailState {
 }
 
+class _FakeWatchlistMovieState_1 extends _i1.Fake
+    implements _i3.WatchlistMovieState {}
+
+class _FakeMovieRecommendationsState_2 extends _i1.Fake
+    implements _i4.MovieRecommendationsState {}
+
 /// A class which mocks [MovieDetailCubit].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMovieDetailCubit extends _i1.Mock implements _i3.MovieDetailCubit {
+class MockMovieDetailCubit extends _i1.Mock implements _i5.MovieDetailCubit {
   MockMovieDetailCubit() {
     _i1.throwOnMissingStub(this);
   }
@@ -37,10 +52,10 @@ class MockMovieDetailCubit extends _i1.Mock implements _i3.MovieDetailCubit {
       (super.noSuchMethod(Invocation.getter(#state),
           returnValue: _FakeMovieDetailState_0()) as _i2.MovieDetailState);
   @override
-  _i4.Stream<_i2.MovieDetailState> get stream =>
+  _i6.Stream<_i2.MovieDetailState> get stream =>
       (super.noSuchMethod(Invocation.getter(#stream),
               returnValue: Stream<_i2.MovieDetailState>.empty())
-          as _i4.Stream<_i2.MovieDetailState>);
+          as _i6.Stream<_i2.MovieDetailState>);
   @override
   bool get isClosed =>
       (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
@@ -54,7 +69,7 @@ class MockMovieDetailCubit extends _i1.Mock implements _i3.MovieDetailCubit {
       super.noSuchMethod(Invocation.method(#emit, [state]),
           returnValueForMissingStub: null);
   @override
-  void onChange(_i5.Change<_i2.MovieDetailState>? change) =>
+  void onChange(_i7.Change<_i2.MovieDetailState>? change) =>
       super.noSuchMethod(Invocation.method(#onChange, [change]),
           returnValueForMissingStub: null);
   @override
@@ -66,7 +81,115 @@ class MockMovieDetailCubit extends _i1.Mock implements _i3.MovieDetailCubit {
       super.noSuchMethod(Invocation.method(#onError, [error, stackTrace]),
           returnValueForMissingStub: null);
   @override
-  _i4.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
+  _i6.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
+}
+
+/// A class which mocks [WatchlistMovieCubit].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockWatchlistMovieCubit extends _i1.Mock
+    implements _i8.WatchlistMovieCubit {
+  MockWatchlistMovieCubit() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.WatchlistMovieState get state => (super.noSuchMethod(
+      Invocation.getter(#state),
+      returnValue: _FakeWatchlistMovieState_1()) as _i3.WatchlistMovieState);
+  @override
+  _i6.Stream<_i3.WatchlistMovieState> get stream =>
+      (super.noSuchMethod(Invocation.getter(#stream),
+              returnValue: Stream<_i3.WatchlistMovieState>.empty())
+          as _i6.Stream<_i3.WatchlistMovieState>);
+  @override
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
+  @override
+  void fetchData() => super.noSuchMethod(Invocation.method(#fetchData, []),
+      returnValueForMissingStub: null);
+  @override
+  void addToWatchlist(_i9.MovieDetail? movie) =>
+      super.noSuchMethod(Invocation.method(#addToWatchlist, [movie]),
+          returnValueForMissingStub: null);
+  @override
+  void removeFromWatchlist(_i9.MovieDetail? movie) =>
+      super.noSuchMethod(Invocation.method(#removeFromWatchlist, [movie]),
+          returnValueForMissingStub: null);
+  @override
+  void loadWatchlistStatus(int? id) =>
+      super.noSuchMethod(Invocation.method(#loadWatchlistStatus, [id]),
+          returnValueForMissingStub: null);
+  @override
+  void emit(_i3.WatchlistMovieState? state) =>
+      super.noSuchMethod(Invocation.method(#emit, [state]),
+          returnValueForMissingStub: null);
+  @override
+  void onChange(_i7.Change<_i3.WatchlistMovieState>? change) =>
+      super.noSuchMethod(Invocation.method(#onChange, [change]),
+          returnValueForMissingStub: null);
+  @override
+  void addError(Object? error, [StackTrace? stackTrace]) =>
+      super.noSuchMethod(Invocation.method(#addError, [error, stackTrace]),
+          returnValueForMissingStub: null);
+  @override
+  void onError(Object? error, StackTrace? stackTrace) =>
+      super.noSuchMethod(Invocation.method(#onError, [error, stackTrace]),
+          returnValueForMissingStub: null);
+  @override
+  _i6.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
+}
+
+/// A class which mocks [MovieRecommendationsCubit].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMovieRecommendationsCubit extends _i1.Mock
+    implements _i10.MovieRecommendationsCubit {
+  MockMovieRecommendationsCubit() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.MovieRecommendationsState get state =>
+      (super.noSuchMethod(Invocation.getter(#state),
+              returnValue: _FakeMovieRecommendationsState_2())
+          as _i4.MovieRecommendationsState);
+  @override
+  _i6.Stream<_i4.MovieRecommendationsState> get stream =>
+      (super.noSuchMethod(Invocation.getter(#stream),
+              returnValue: Stream<_i4.MovieRecommendationsState>.empty())
+          as _i6.Stream<_i4.MovieRecommendationsState>);
+  @override
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
+  @override
+  void fetchData(int? id) =>
+      super.noSuchMethod(Invocation.method(#fetchData, [id]),
+          returnValueForMissingStub: null);
+  @override
+  void emit(_i4.MovieRecommendationsState? state) =>
+      super.noSuchMethod(Invocation.method(#emit, [state]),
+          returnValueForMissingStub: null);
+  @override
+  void onChange(_i7.Change<_i4.MovieRecommendationsState>? change) =>
+      super.noSuchMethod(Invocation.method(#onChange, [change]),
+          returnValueForMissingStub: null);
+  @override
+  void addError(Object? error, [StackTrace? stackTrace]) =>
+      super.noSuchMethod(Invocation.method(#addError, [error, stackTrace]),
+          returnValueForMissingStub: null);
+  @override
+  void onError(Object? error, StackTrace? stackTrace) =>
+      super.noSuchMethod(Invocation.method(#onError, [error, stackTrace]),
+          returnValueForMissingStub: null);
+  @override
+  _i6.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
 }

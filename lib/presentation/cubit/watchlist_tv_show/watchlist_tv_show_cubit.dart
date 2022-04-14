@@ -40,14 +40,12 @@ class WatchlistTvShowCubit extends Cubit<WatchlistTvShowState> {
 
     result.fold(
       (failure) {
-        WatchlistTvShowMessage(failure.message);
+        emit(WatchlistTvShowMessage(failure.message));
       },
       (successMessage) {
-        WatchlistTvShowMessage(successMessage);
+        emit(WatchlistTvShowMessage(successMessage));
       },
     );
-
-    loadWatchlistStatus(tvShowDetail.id);
   }
 
   void removeFromWatchlist(TvShowDetail tvShowDetail) async {
@@ -55,14 +53,12 @@ class WatchlistTvShowCubit extends Cubit<WatchlistTvShowState> {
 
     result.fold(
       (failure) {
-        WatchlistTvShowMessage(failure.message);
+        emit(WatchlistTvShowMessage(failure.message));
       },
       (successMessage) {
-        WatchlistTvShowMessage(successMessage);
+        emit(WatchlistTvShowMessage(successMessage));
       },
     );
-
-    loadWatchlistStatus(tvShowDetail.id);
   }
 
   void loadWatchlistStatus(int id) async {
