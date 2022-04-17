@@ -31,13 +31,13 @@
             <td class="headerValue">lcov.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">26</td>
-            <td class="headerCovTableEntry">26</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntry">29</td>
+            <td class="headerCovTableEntry">30</td>
+            <td class="headerCovTableEntryHi">96.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-04-04 12:41:32</td>
+            <td class="headerValue">2022-04-14 11:34:47</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -62,13 +62,13 @@
 <pre class="source">
 <a name="1"><span class="lineNum">       1 </span>            : import 'package:ditonton/common/constants.dart';</a>
 <a name="2"><span class="lineNum">       2 </span>            : import 'package:ditonton/common/menu_enum.dart';</a>
-<a name="3"><span class="lineNum">       3 </span>            : import 'package:ditonton/common/state_enum.dart';</a>
-<a name="4"><span class="lineNum">       4 </span>            : import 'package:ditonton/presentation/pages/movie_detail_page.dart';</a>
-<a name="5"><span class="lineNum">       5 </span>            : import 'package:ditonton/presentation/provider/movie/popular_movies_notifier.dart';</a>
+<a name="3"><span class="lineNum">       3 </span>            : import 'package:ditonton/presentation/cubit/popular_movies/popular_movies_cubit.dart';</a>
+<a name="4"><span class="lineNum">       4 </span>            : import 'package:ditonton/presentation/cubit/popular_movies/popular_movies_state.dart';</a>
+<a name="5"><span class="lineNum">       5 </span>            : import 'package:ditonton/presentation/pages/movie_detail_page.dart';</a>
 <a name="6"><span class="lineNum">       6 </span>            : import 'package:ditonton/presentation/widgets/content_card_list.dart';</a>
 <a name="7"><span class="lineNum">       7 </span>            : import 'package:ditonton/presentation/widgets/view_error.dart';</a>
 <a name="8"><span class="lineNum">       8 </span>            : import 'package:flutter/material.dart';</a>
-<a name="9"><span class="lineNum">       9 </span>            : import 'package:provider/provider.dart';</a>
+<a name="9"><span class="lineNum">       9 </span>            : import 'package:flutter_bloc/flutter_bloc.dart';</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
 <a name="11"><span class="lineNum">      11 </span>            : class PopularMoviesPage extends StatefulWidget {</a>
 <a name="12"><span class="lineNum">      12 </span>            :   static const ROUTE_NAME = '/popular-movie';</a>
@@ -81,49 +81,54 @@
 <a name="19"><span class="lineNum">      19 </span><span class="lineCov">          1 :   @override</span></a>
 <a name="20"><span class="lineNum">      20 </span>            :   void initState() {</a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineCov">          1 :     super.initState();</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">          2 :     Future.microtask(() =&gt;</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">          2 :         Provider.of&lt;PopularMoviesNotifier&gt;(context, listen: false)</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">          1 :             .fetchPopularMovies());</span></a>
-<a name="25"><span class="lineNum">      25 </span>            :   }</a>
-<a name="26"><span class="lineNum">      26 </span>            : </a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">          1 :   @override</span></a>
-<a name="28"><span class="lineNum">      28 </span>            :   Widget build(BuildContext context) {</a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">          1 :     return Scaffold(</span></a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineCov">          1 :       appBar: AppBar(</span></a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">          2 :         title: Text('$HEADING_POPULAR Movies'),</span></a>
-<a name="32"><span class="lineNum">      32 </span>            :       ),</a>
-<a name="33"><span class="lineNum">      33 </span><span class="lineCov">          1 :       body: Padding(</span></a>
-<a name="34"><span class="lineNum">      34 </span>            :         padding: const EdgeInsets.all(8.0),</a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineCov">          1 :         child: Consumer&lt;PopularMoviesNotifier&gt;(</span></a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineCov">          1 :           builder: (context, data, child) {</span></a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">          2 :             if (data.state == RequestState.Loading) {</span></a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineCov">          1 :               return Center(</span></a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">          1 :                 child: CircularProgressIndicator(),</span></a>
-<a name="40"><span class="lineNum">      40 </span>            :               );</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">          2 :             } else if (data.state == RequestState.Loaded) {</span></a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineCov">          1 :               return ListView.builder(</span></a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          1 :                 itemBuilder: (context, index) {</span></a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineCov">          2 :                   final movie = data.movies[index];</span></a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          1 :                   return ContentCard(</span></a>
-<a name="46"><span class="lineNum">      46 </span>            :                     activeMenu: MenuItem.Movie,</a>
-<a name="47"><span class="lineNum">      47 </span>            :                     movie: movie,</a>
-<a name="48"><span class="lineNum">      48 </span>            :                     routeName: MovieDetailPage.ROUTE_NAME,</a>
-<a name="49"><span class="lineNum">      49 </span>            :                   );</a>
-<a name="50"><span class="lineNum">      50 </span>            :                 },</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">          2 :                 itemCount: data.movies.length,</span></a>
-<a name="52"><span class="lineNum">      52 </span>            :               );</a>
-<a name="53"><span class="lineNum">      53 </span>            :             } else {</a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">          1 :               return Center(</span></a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 :                 key: Key('error_message'),</span></a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">          2 :                 child: ViewError(message: data.message),</span></a>
-<a name="57"><span class="lineNum">      57 </span>            :               );</a>
-<a name="58"><span class="lineNum">      58 </span>            :             }</a>
-<a name="59"><span class="lineNum">      59 </span>            :           },</a>
-<a name="60"><span class="lineNum">      60 </span>            :         ),</a>
-<a name="61"><span class="lineNum">      61 </span>            :       ),</a>
-<a name="62"><span class="lineNum">      62 </span>            :     );</a>
-<a name="63"><span class="lineNum">      63 </span>            :   }</a>
-<a name="64"><span class="lineNum">      64 </span>            : }</a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">          5 :     Future.microtask(() =&gt; context.read&lt;PopularMoviesCubit&gt;().fetchData());</span></a>
+<a name="23"><span class="lineNum">      23 </span>            :   }</a>
+<a name="24"><span class="lineNum">      24 </span>            : </a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">          1 :   @override</span></a>
+<a name="26"><span class="lineNum">      26 </span>            :   Widget build(BuildContext context) {</a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">          1 :     return Scaffold(</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          1 :       appBar: AppBar(</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">          2 :         title: Text('$HEADING_POPULAR Movies'),</span></a>
+<a name="30"><span class="lineNum">      30 </span>            :       ),</a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">          1 :       body: Padding(</span></a>
+<a name="32"><span class="lineNum">      32 </span>            :         padding: const EdgeInsets.all(8.0),</a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineCov">          1 :         child: BlocBuilder&lt;PopularMoviesCubit, PopularMoviesState&gt;(</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">          1 :           builder: (context, state) {</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineCov">          1 :             if (state is PopularMoviesLoading) {</span></a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">          1 :               return Center(</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">          1 :                 child: CircularProgressIndicator(),</span></a>
+<a name="38"><span class="lineNum">      38 </span>            :               );</a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">          1 :             } else if (state is PopularMoviesEmpty) {</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">          1 :               return Center(</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">          1 :                 key: Key('empty'),</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">          1 :                 child: ViewError(message: 'No Data'),</span></a>
+<a name="43"><span class="lineNum">      43 </span>            :               );</a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">          1 :             } else if (state is PopularMoviesHasData) {</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          1 :               return ListView.builder(</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">          1 :                 itemBuilder: (context, index) {</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">          2 :                   final movie = state.movies[index];</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">          1 :                   return ContentCard(</span></a>
+<a name="49"><span class="lineNum">      49 </span>            :                     activeMenu: MenuItem.Movie,</a>
+<a name="50"><span class="lineNum">      50 </span>            :                     movie: movie,</a>
+<a name="51"><span class="lineNum">      51 </span>            :                     routeName: MovieDetailPage.ROUTE_NAME,</a>
+<a name="52"><span class="lineNum">      52 </span>            :                   );</a>
+<a name="53"><span class="lineNum">      53 </span>            :                 },</a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">          2 :                 itemCount: state.movies.length,</span></a>
+<a name="55"><span class="lineNum">      55 </span>            :               );</a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">          1 :             } else if (state is PopularMoviesError) {</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">          1 :               return Center(</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">          1 :                 key: Key('error_message'),</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">          2 :                 child: ViewError(message: state.message),</span></a>
+<a name="60"><span class="lineNum">      60 </span>            :               );</a>
+<a name="61"><span class="lineNum">      61 </span>            :             } else {</a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 :               return Container();</span></a>
+<a name="63"><span class="lineNum">      63 </span>            :             }</a>
+<a name="64"><span class="lineNum">      64 </span>            :           },</a>
+<a name="65"><span class="lineNum">      65 </span>            :         ),</a>
+<a name="66"><span class="lineNum">      66 </span>            :       ),</a>
+<a name="67"><span class="lineNum">      67 </span>            :     );</a>
+<a name="68"><span class="lineNum">      68 </span>            :   }</a>
+<a name="69"><span class="lineNum">      69 </span>            : }</a>
 </pre>
       </td>
     </tr>

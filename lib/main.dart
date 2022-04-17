@@ -1,36 +1,19 @@
-import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/menu_enum.dart';
-import 'package:ditonton/common/utils.dart';
-import 'package:ditonton/presentation/pages/about_page.dart';
-import 'package:ditonton/presentation/pages/home_tv_show_page.dart';
-import 'package:ditonton/presentation/pages/movie_detail_page.dart';
-import 'package:ditonton/presentation/pages/home_movie_page.dart';
-import 'package:ditonton/presentation/pages/popular_movies_page.dart';
-import 'package:ditonton/presentation/pages/popular_tv_shows_page.dart';
-import 'package:ditonton/presentation/pages/search_page.dart';
-import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
-import 'package:ditonton/presentation/pages/top_rated_tv_shows_page.dart';
-import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
-import 'package:ditonton/presentation/pages/watchlist_page.dart';
-import 'package:ditonton/presentation/provider/menu_notifier.dart';
-import 'package:ditonton/presentation/provider/movie/movie_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/movie/movie_list_notifier.dart';
-import 'package:ditonton/presentation/provider/search_notifier.dart';
-import 'package:ditonton/presentation/provider/movie/popular_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/movie/top_rated_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/movie/watchlist_movie_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_show/popular_tv_shows_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_show/top_rated_tv_shows_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_show/tv_show_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_show/tv_show_list_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_show/watchlist_tv_show_notifier.dart';
-import 'package:ditonton/presentation/widgets/custom_darawer.dart';
+import 'package:about/about.dart';
+import 'package:core/core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie/movie.dart';
 import 'package:provider/provider.dart';
 import 'package:ditonton/injection.dart' as di;
+import 'package:search/search.dart';
+import 'package:tv_show/tv_show.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HttpSSLPinning.init();
+  await Firebase.initializeApp();
   di.init();
   runApp(MyApp());
 }
@@ -40,45 +23,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieListNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieDetailNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<SearchNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedMoviesNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<PopularMoviesNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistMovieNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TvShowListNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TvShowDetailNotifier>(),
-        ),
-        // ChangeNotifierProvider(
-        //   create: (_) => di.locator<TvShowSearchNotifier>(),
-        // ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedTvShowsNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<PopularTvShowsNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistTvShowNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MenuNotifier>(),
-        ),
+        BlocProvider(create: (_) => di.locator<NowPlayingMoviesCubit>()),
+        BlocProvider(create: (_) => di.locator<MovieDetailCubit>()),
+        BlocProvider(create: (_) => di.locator<MovieRecommendationsCubit>()),
+        BlocProvider(create: (_) => di.locator<SearchMovieBloc>()),
+        BlocProvider(create: (_) => di.locator<PopularMoviesCubit>()),
+        BlocProvider(create: (_) => di.locator<TopRatedMoviesCubit>()),
+        BlocProvider(create: (_) => di.locator<WatchlistMovieCubit>()),
+        BlocProvider(create: (_) => di.locator<NowPlayingTvShowsCubit>()),
+        BlocProvider(create: (_) => di.locator<TvShowDetailCubit>()),
+        BlocProvider(create: (_) => di.locator<TvShowRecommendationsCubit>()),
+        BlocProvider(create: (_) => di.locator<SearchTvShowBloc>()),
+        BlocProvider(create: (_) => di.locator<PopularTvShowsCubit>()),
+        BlocProvider(create: (_) => di.locator<TopRatedTvShowsCubit>()),
+        BlocProvider(create: (_) => di.locator<WatchlistTvShowCubit>()),
+        BlocProvider(create: (_) => di.locator<MenuCubit>()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -88,17 +47,17 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: kRichBlack,
           textTheme: kTextTheme,
         ),
-        home: Consumer<MenuNotifier>(
-          builder: (context, data, child) {
-            final activeMenu = data.selectedMenu;
+        home: BlocBuilder<MenuCubit, MenuItem>(
+          builder: (context, menu) {
+            final activeMenu = menu;
 
             return Material(
               child: CustomDrawer(
                 activeMenu: activeMenu,
                 menuClickCallback: (MenuItem menuSelected) {
-                  data.setSelectedMenu(menuSelected);
+                  context.read<MenuCubit>().setSelectedMenu(menuSelected);
                 },
-                content: activeMenu == MenuItem.Movie
+                content: activeMenu == MenuItem.movie
                     ? HomeMoviePage()
                     : HomeTvShowPage(),
               ),
@@ -110,33 +69,33 @@ class MyApp extends StatelessWidget {
           switch (settings.name) {
             case '/home':
               return MaterialPageRoute(builder: (_) => HomeMoviePage());
-            case PopularMoviesPage.ROUTE_NAME:
+            case popularMovieRoute:
               return CupertinoPageRoute(builder: (_) => PopularMoviesPage());
-            case PopularTvShowsPage.ROUTE_NAME:
+            case popularTvShowRoute:
               return CupertinoPageRoute(builder: (_) => PopularTvShowsPage());
-            case TopRatedMoviesPage.ROUTE_NAME:
+            case topRatedMovieRoute:
               return CupertinoPageRoute(builder: (_) => TopRatedMoviesPage());
-            case TopRatedTvShowsPage.ROUTE_NAME:
+            case topRatedTvShowRoute:
               return CupertinoPageRoute(builder: (_) => TopRatedTvShowsPage());
-            case MovieDetailPage.ROUTE_NAME:
+            case movieDetailRoute:
               final id = settings.arguments as int;
               return MaterialPageRoute(
                 builder: (_) => MovieDetailPage(id: id),
                 settings: settings,
               );
-            case TvShowDetailPage.ROUTE_NAME:
+            case tvShowDetailRoute:
               final id = settings.arguments as int;
               return MaterialPageRoute(
                 builder: (_) => TvShowDetailPage(id: id),
                 settings: settings,
               );
-            case SearchPage.ROUTE_NAME:
+            case searchRoute:
               return CupertinoPageRoute(
                 builder: (_) => SearchPage(),
               );
-            case WatchlistPage.ROUTE_NAME:
+            case watchlistRoute:
               return MaterialPageRoute(builder: (_) => WatchlistPage());
-            case AboutPage.ROUTE_NAME:
+            case aboutRoute:
               return MaterialPageRoute(builder: (_) => AboutPage());
             default:
               return MaterialPageRoute(builder: (_) {
