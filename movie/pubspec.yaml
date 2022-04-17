@@ -17,6 +17,8 @@ dependencies:
   dartz: ^0.10.0-nullsafety.2
   cached_network_image: ^3.0.0
   flutter_rating_bar: ^4.0.0
+  firebase_core: ^1.14.1
+  firebase_crashlytics: ^2.6.2
 
 dev_dependencies:
   flutter_test:
