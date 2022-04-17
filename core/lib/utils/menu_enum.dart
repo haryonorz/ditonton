@@ -1,0 +1,1 @@
+enum MenuItem { movie, tvShow }

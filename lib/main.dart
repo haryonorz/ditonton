@@ -1,39 +1,13 @@
-import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/http_ssl_pinning.dart';
-import 'package:ditonton/common/menu_enum.dart';
-import 'package:ditonton/common/utils.dart';
-import 'package:ditonton/presentation/bloc/search_bloc.dart';
-import 'package:ditonton/presentation/cubit/movie_detail/movie_detail_cubit.dart';
-import 'package:ditonton/presentation/cubit/movie_recommendations/movie_recommendations_cubit.dart';
-import 'package:ditonton/presentation/cubit/now_playing_movies/now_playing_movies_cubit.dart';
-import 'package:ditonton/presentation/cubit/now_playing_tv_shows/now_playing_tv_shows_cubit.dart';
-import 'package:ditonton/presentation/cubit/popular_movies/popular_movies_cubit.dart';
-import 'package:ditonton/presentation/cubit/popular_tv_shows/popular_tv_shows_cubit.dart';
-import 'package:ditonton/presentation/cubit/top_rated_movies/top_rated_movies_cubit.dart';
-import 'package:ditonton/presentation/cubit/top_rated_tv_shows/top_rated_tv_shows_cubit.dart';
-import 'package:ditonton/presentation/cubit/tv_show_detail/tv_show_detail_cubit.dart';
-import 'package:ditonton/presentation/cubit/tv_show_recommendations/tv_show_recommendations_cubit.dart';
-import 'package:ditonton/presentation/cubit/watchlist_movie/watchlist_movie_cubit.dart';
-import 'package:ditonton/presentation/cubit/watchlist_tv_show/watchlist_tv_show_cubit.dart';
-import 'package:ditonton/presentation/pages/about_page.dart';
-import 'package:ditonton/presentation/pages/home_tv_show_page.dart';
-import 'package:ditonton/presentation/pages/movie_detail_page.dart';
-import 'package:ditonton/presentation/pages/home_movie_page.dart';
-import 'package:ditonton/presentation/pages/popular_movies_page.dart';
-import 'package:ditonton/presentation/pages/popular_tv_shows_page.dart';
-import 'package:ditonton/presentation/pages/search_page.dart';
-import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
-import 'package:ditonton/presentation/pages/top_rated_tv_shows_page.dart';
-import 'package:ditonton/presentation/pages/tv_show_detail_page.dart';
-import 'package:ditonton/presentation/pages/watchlist_page.dart';
-import 'package:ditonton/presentation/widgets/custom_darawer.dart';
+import 'package:about/about.dart';
+import 'package:core/core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie/movie.dart';
 import 'package:provider/provider.dart';
 import 'package:ditonton/injection.dart' as di;
-
-import 'presentation/cubit/menu_cubit.dart';
+import 'package:search/search.dart';
+import 'package:tv_show/tv_show.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,7 +55,7 @@ class MyApp extends StatelessWidget {
                 menuClickCallback: (MenuItem menuSelected) {
                   context.read<MenuCubit>().setSelectedMenu(menuSelected);
                 },
-                content: activeMenu == MenuItem.Movie
+                content: activeMenu == MenuItem.movie
                     ? HomeMoviePage()
                     : HomeTvShowPage(),
               ),
@@ -93,33 +67,33 @@ class MyApp extends StatelessWidget {
           switch (settings.name) {
             case '/home':
               return MaterialPageRoute(builder: (_) => HomeMoviePage());
-            case PopularMoviesPage.ROUTE_NAME:
+            case popularMovieRoute:
               return CupertinoPageRoute(builder: (_) => PopularMoviesPage());
-            case PopularTvShowsPage.ROUTE_NAME:
+            case popularTvShowRoute:
               return CupertinoPageRoute(builder: (_) => PopularTvShowsPage());
-            case TopRatedMoviesPage.ROUTE_NAME:
+            case topRatedMovieRoute:
               return CupertinoPageRoute(builder: (_) => TopRatedMoviesPage());
-            case TopRatedTvShowsPage.ROUTE_NAME:
+            case topRatedTvShowRoute:
               return CupertinoPageRoute(builder: (_) => TopRatedTvShowsPage());
-            case MovieDetailPage.ROUTE_NAME:
+            case movieDetailRoute:
               final id = settings.arguments as int;
               return MaterialPageRoute(
                 builder: (_) => MovieDetailPage(id: id),
                 settings: settings,
               );
-            case TvShowDetailPage.ROUTE_NAME:
+            case tvShowDetailRoute:
               final id = settings.arguments as int;
               return MaterialPageRoute(
                 builder: (_) => TvShowDetailPage(id: id),
                 settings: settings,
               );
-            case SearchPage.ROUTE_NAME:
+            case searchRoute:
               return CupertinoPageRoute(
                 builder: (_) => SearchPage(),
               );
-            case WatchlistPage.ROUTE_NAME:
+            case watchlistRoute:
               return MaterialPageRoute(builder: (_) => WatchlistPage());
-            case AboutPage.ROUTE_NAME:
+            case aboutRoute:
               return MaterialPageRoute(builder: (_) => AboutPage());
             default:
               return MaterialPageRoute(builder: (_) {
