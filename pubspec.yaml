@@ -24,15 +24,15 @@ dependencies:
   flutter:
     sdk: flutter
   core:
-    path: core
+    path: packages/core
   movie:
-    path: movie
+    path: packages/movie
   tv_show:
-    path: tv_show
+    path: packages/tv_show
   search:
-    path: search
+    path: packages/search
   about:
-    path: about
+    path: packages/about
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
